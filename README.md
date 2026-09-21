@@ -1,55 +1,55 @@
-# Pencari Author SINTA (SINTA Author Matcher & Resolver)
+# Pencari Author SINTA & Scopus (Chrome Extension & Dashboard)
 
-Aplikasi web modern, ringan, dan sederhana (*light mode*) untuk mencari, mencocokkan kemiripan, dan mengumpulkan data profil author dari portal resmi SINTA (Science and Technology Index Kemdiktisaintek).
+Ekstensi Google Chrome (Manifest V3) dengan **Dashboard Tab Penuh** bernuansa *light mode* untuk mencari, mencocokkan kemiripan, dan mengumpulkan data author dari:
+1. **SINTA Kemdiktisaintek** (Portal Nasional)
+2. **SCOPUS Elsevier** (Database Internasional)
 
 ---
 
 ## Fitur Utama
 
-1. **Pembersih Gelar Akademik Otomatis**:
-   - Mendeteksi dan menghapus gelar depan (*Prof., Dr., Dra., Drs., Ir., dr., Ns.*, dll.) dan gelar belakang (*S.T., M.Kom., Ph.D., S.Pd., M.Si.*, dll.) agar pencarian SINTA akurat.
-   - Nama asli tetap tersimpan di tabel hasil dan file CSV.
+1. **Dua Sumber Data dalam Satu Dashboard**:
+   * Tab **[ 🏛️ SINTA ]**: Mencari profil author SINTA, skor 3 tahun, total skor, Scopus H-index, Scholar H-index, WOS H-index, serta bidang keahlian.
+   * Tab **[ 🔬 SCOPUS ]**: Mencari profil author Scopus, Scopus Author ID, afiliasi kampus/organisasi, kota, negara, jumlah dokumen, dan h-index Scopus.
 
-2. **Pencari & Perata Derajat Kemiripan (Fuzzy Matching)**:
-   - Menghitung persentase kemiripan nama input vs nama kandidat yang ditemukan di SINTA.
-   - Mengurutkan kandidat secara otomatis dari yang paling mirip.
+2. **Bypass Cloudflare & Anti-Bot Scopus**:
+   * Menggunakan konsep **Chrome Extension**: berjalan langsung di dalam Google Chrome asli dengan sesi login yang valid, sehingga tidak dicegat oleh Cloudflare ataupun SSO Elsevier.
 
-3. **Resolusi Kandidat Interaktif (Review Manual)**:
-   - Jika ditemukan lebih dari satu kandidat (atau kemiripan nama bervariasi), Anda dapat memilih sendiri author yang benar melalui kartu profil visual lengkap dengan:
-     - Foto avatar
-     - Nama & ID SINTA
-     - Afiliasi / Kampus & Program Studi
-     - SINTA Score 3Yr & Overall
-     - Scopus & Scholar H-Index
-     - Bidang minat / Subjects
-   - Tersedia opsi *"Tidak Ada yang Benar"* jika semua kandidat bukan orang yang dimaksud.
-   - Tombol cepat *"Pilih Rekomendasi Teratas untuk Semua"*.
+3. **Pembersih Gelar & Pemisahan Nama Cerdas**:
+   * Gelar depan (*Prof, Dr, Ir, dr, Ns*) dan gelar belakang (*S.T., M.Kom., Ph.D., S.Pd.*) otomatis dibersihkan.
+   * Untuk Scopus, nama otomatis dipecah menjadi **First Name** dan **Last Name** (contoh: `Dr. Tio Haidar Hanif, M.Kom.` $\rightarrow$ First: `Tio Haidar`, Last: `Hanif`).
 
-4. **Jeda Waktu Pencarian (Anti Rate-Limit)**:
-   - Dilengkapi pengaturan delay (800ms – 3000ms) untuk mencegah pemblokiran IP saat memproses banyak nama.
-   - Kontrol *Jeda (Pause)* dan *Lanjutkan (Resume)* saat proses berlangsung.
+4. **Hapus Duplikat Otomatis**:
+   * Menghilangkan nama ganda/duplikat sebelum pencarian berjalan.
 
-5. **Ekspor CSV (Excel Compatible)**:
-   - Hasil pencarian dapat diunduh ke file `.csv` dengan standar UTF-8 BOM, sehingga langsung rapi saat dibuka di Microsoft Excel.
+5. **Resolusi Kandidat Interaktif**:
+   * Jika ditemukan lebih dari satu kandidat di SINTA atau Scopus, kartu profil visual akan ditampilkan untuk memilih author yang benar atau menandai *"Tidak Ada yang Benar"*.
+
+6. **Salin Tabel & Ekspor CSV**:
+   * **`📋 Salin Tabel`**: Menyalin data dalam format TSV yang langsung rapi saat di-paste (**Ctrl+V**) ke Microsoft Excel atau Google Sheets.
+   * **`📥 Unduh CSV`**: Mengunduh file CSV dengan format standar UTF-8 BOM.
 
 ---
 
-## Cara Menjalankan
+## Cara Memasang Ekstensi di Google Chrome (Hanya 1 Menit)
 
-### Cara 1: Sekali Klik (Windows)
-Cukup klik ganda file **`run.bat`**. Browser akan otomatis terbuka ke alamat `http://localhost:8000`.
-
-### Cara 2: Lewat Terminal / PowerShell
-```bash
-python server.py
-```
-Lalu buka browser Anda ke `http://localhost:8000`.
+1. Buka browser **Google Chrome**.
+2. Masuk ke alamat: **`chrome://extensions`** (ketik di address bar).
+3. Aktifkan toggle **Developer mode** (di pojok kanan atas).
+4. Klik tombol **Load unpacked** (di pojok kiri atas).
+5. Pilih folder proyek ini:
+   ```
+   c:\Users\Tio Haidar Hanif\Kode\Pencari Author Sinta
+   ```
+6. Ekstensi **"Pencari Author SINTA & Scopus"** siap digunakan!
 
 ---
 
-## Struktur File
-* `index.html` : Tampilan antarmuka web (light mode minimalis).
-* `style.css` : Lembar gaya desain antarmuka, kartu kandidat, dan tabel.
-* `app.js` : Logika pembersih gelar, pencocokan string, parser HTML, modal review, dan export CSV.
-* `server.py` : Server lokal zero-dependency (pustaka standar Python) untuk bypass CORS browser dan AWS WAF.
-* `run.bat` : Launcher Windows 1-klik.
+## Cara Menggunakan
+
+1. Klik icon ekstensi di toolbar Google Chrome (atau buka file `index.html`).
+2. Pilih tab yang ingin dicari: **[ SINTA ]** atau **[ SCOPUS ]**.
+3. Masukkan daftar nama (atau klik *"Gunakan Contoh Nama"*).
+4. Klik **"▶ Mulai Pencarian"**.
+5. Jika ada kandidat yang perlu konfirmasi, tentukan kandidat yang sesuai.
+6. Klik **"📋 Salin Tabel"** atau **"📥 Unduh CSV"** untuk mengambil hasilnya.

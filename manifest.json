@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Pencari Author SINTA & Scopus",
+  "version": "1.0.0",
+  "description": "Ekstensi Chrome untuk mencari, mencocokkan kemiripan, dan mengumpulkan data author SINTA & Scopus secara otomatis.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://sinta.kemdiktisaintek.go.id/*",
+    "https://*.scopus.com/*",
+    "https://scopus.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Buka Dashboard Pencari Author",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "128": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.scopus.com/*",
+        "https://scopus.com/*"
+      ],
+      "js": ["scopus-content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
