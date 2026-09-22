@@ -10,6 +10,7 @@
   ],
   "host_permissions": [
     "https://sinta.kemdiktisaintek.go.id/*",
+    "https://garuda.kemdiktisaintek.go.id/*",
     "https://*.scopus.com/*",
     "https://scopus.com/*"
   ],

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panduan dan Pemasangan Ekstensi Pencari Author SINTA & Scopus</title>
+    <title>Panduan dan Pemasangan Ekstensi Pencari Author SINTA, GARUDA & Scopus</title>
     <style>
         :root {
             --bg: #f9fafb;
@@ -249,15 +249,9 @@
 
         .os-columns {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 16px;
             margin-top: 14px;
-        }
-
-        @media (max-width: 680px) {
-            .os-columns {
-                grid-template-columns: 1fr;
-            }
         }
 
         .os-box {
@@ -308,7 +302,7 @@
     <!-- Header Navigation -->
     <header class="header-bar">
         <div class="header-inner">
-            <a href="#" class="header-title">Pencari Author SINTA & Scopus</a>
+            <a href="#" class="header-title">Pencari Author SINTA, GARUDA & Scopus</a>
             <div class="header-nav">
                 <a href="dashboard.html">Dashboard Aplikasi</a>
                 <a href="https://github.com/atiohaidar/Pencari-Author" target="_blank" rel="noopener">Repositori GitHub</a>
@@ -322,7 +316,7 @@
         <section class="doc-intro">
             <h1>Panduan Pemasangan dan Penggunaan Ekstensi</h1>
             <p class="description">
-                Ekstensi Google Chrome untuk mencari profil author pada pangkalan data SINTA Kemdiktisaintek dan Scopus Elsevier. Ekstensi ini berjalan langsung di dalam peramban web tanpa memerlukan instalasi perangkat lunak tambahan seperti Python atau Node.js.
+                Ekstensi Google Chrome untuk mencari profil author pada pangkalan data SINTA Kemdiktisaintek, GARUDA (Garba Rujukan Digital), dan Scopus Elsevier. Ekstensi ini berjalan langsung di dalam peramban web tanpa memerlukan instalasi perangkat lunak tambahan seperti Python atau Node.js.
             </p>
 
             <div class="action-row">
@@ -335,14 +329,14 @@
                 </a>
             </div>
 
-       
-
             <nav class="table-of-contents">
                 <a href="#instalasi">1. Pemasangan Ekstensi</a>
-                <a href="#sinta">2. Pencarian SINTA</a>
-                <a href="#scopus">3. Pencarian Scopus</a>
-                <a href="#ekspor">4. Salin ke Spreadsheet</a>
-                <a href="#faq">5. Catatan Teknis (FAQ)</a>
+                <a href="#gabungan">2. Pencarian Gabungan (Semua Sumber)</a>
+                <a href="#sinta">3. Pencarian SINTA</a>
+                <a href="#garuda">4. Pencarian GARUDA</a>
+                <a href="#scopus">5. Pencarian Scopus</a>
+                <a href="#ekspor">6. Salin ke Spreadsheet</a>
+                <a href="#faq">7. Catatan Teknis (FAQ)</a>
             </nav>
         </section>
 
@@ -350,21 +344,19 @@
         <section id="instalasi" class="doc-section">
             <h2>1. Pemasangan di Google Chrome (Hanya Dilakukan Sekali)</h2>
             <p>
-                Unduh file ZIP dari tombol di atas, kemudian ikuti langkah berikut sesuai sistem operasi laptop yang digunakan:
+                Unduh file ZIP dari tombol di atas, kemudian ikuti langkah berikut:
             </p>
 
             <div class="os-columns">
-               
-          
-                    <ol>
-                        <li>Unduh file ZIP dari GitHub melalui tombol di atas.</li>
-                        <li>Klik kanan file ZIP, pilih <strong>Extract All...</strong>, lalu tentukan folder tujuan.</li>
-                        <li>Buka Google Chrome (atau Microsoft Edge).</li>
-                        <li>Ketik <code>chrome://extensions</code> pada bilah alamat lalu tekan Enter.</li>
-                        <li>Aktifkan sakelar <strong>Developer mode</strong> di sudut kanan atas.</li>
-                        <li>Klik tombol <strong>Load unpacked</strong> di sudut kiri atas.</li>
-                        <li>Pilih folder hasil ekstrak (folder <code>Pencari-Author-main</code>).</li>
-                    </ol>
+                <ol>
+                    <li>Unduh file ZIP dari GitHub melalui tautan di atas.</li>
+                    <li>Klik kanan file ZIP, pilih <strong>Extract All...</strong> (atau unzip di macOS), lalu tentukan folder tujuan.</li>
+                    <li>Buka Google Chrome (atau Microsoft Edge).</li>
+                    <li>Ketik <code>chrome://extensions</code> pada bilah alamat lalu tekan Enter.</li>
+                    <li>Aktifkan sakelar <strong>Developer mode</strong> (Mode pengembang) di sudut kanan atas.</li>
+                    <li>Klik tombol <strong>Load unpacked</strong> (Muat yang belum dibongkar) di sudut kiri atas.</li>
+                    <li>Pilih folder hasil ekstrak (folder <code>Pencari-Author-main</code>).</li>
+                </ol>
             </div>
 
             <p style="margin-top: 14px;">
@@ -372,16 +364,40 @@
             </p>
         </section>
 
-        <!-- Section 2: Pencarian SINTA -->
-        <section id="sinta" class="doc-section">
-            <h2>2. Cara Menggunakan Pencarian SINTA</h2>
+        <!-- Section 2: Pencarian Gabungan -->
+        <section id="gabungan" class="doc-section">
+            <h2>2. Cara Menggunakan Pencarian Gabungan (Semua Sumber)</h2>
             <p>
-                Tab SINTA digunakan untuk mencari profil author pada portal resmi SINTA Kemdiktisaintek, termasuk skor 3 tahun, skor total, H-index Scopus, Google Scholar, dan WOS.
+                Mode <strong>Semua Sumber (Gabungan)</strong> adalah fitur utama yang memungkinkan Anda mencari ke <strong>SINTA, GARUDA, dan SCOPUS sekaligus</strong> dalam satu proses. Hasil pencarian akan disajikan dalam <strong>satu baris per orang</strong> dengan kolom terpisah untuk masing-masing basis data.
             </p>
 
             <ol>
-                <li>Buka dashboard ekstensi dengan mengklik ikon pada toolbar browser.</li>
-                <li>Pilih tab <strong>SINTA</strong>.</li>
+                <li>Buka dashboard ekstensi, pastikan tab <strong>Semua Sumber (Gabungan)</strong> aktif (secara default sudah terpilih).</li>
+                <li>Tempel daftar nama pada kolom input teks (satu nama per baris).</li>
+                <li>Tentukan jeda waktu (disarankan 1.5 detik per nama untuk stabilitas koneksi ketiga sumber data).</li>
+                <li>Klik tombol <strong>Mulai Pencarian Semua Sumber</strong>.</li>
+                <li>
+                    Sistem akan memproses tiap nama secara berurutan: mencari ke SINTA, lalu ke GARUDA, lalu ke SCOPUS.
+                </li>
+                <li>
+                    <strong>Memilih / Mengganti Kandidat Independen:</strong> Pada baris hasil, tiap kolom (SINTA, GARUDA, SCOPUS) memiliki tombol <em>[Pilih]</em> atau <em>[Ganti]</em> sendiri. Jika salah satu sumber memiliki beberapa kandidat nama yang serupa, Anda cukup mengklik tombol di kolom tersebut untuk menentukan kandidat yang benar tanpa mengganggu data sumber lainnya.
+                </li>
+            </ol>
+
+            <div class="note-box">
+                <strong>Ekspor 1 Baris Lengkap:</strong> Saat Anda mengklik <em>Salin Tabel</em> atau <em>Unduh CSV</em> dalam mode ini, satu baris di Excel langsung berisi ID, nama, skor, jumlah dokumen, dan link profil dari SINTA + GARUDA + SCOPUS secara bersamaan!
+            </div>
+        </section>
+
+        <!-- Section 3: Pencarian SINTA -->
+        <section id="sinta" class="doc-section">
+            <h2>3. Cara Menggunakan Pencarian SINTA</h2>
+            <p>
+                Tab SINTA digunakan khusus jika Anda hanya ingin mencari profil author pada portal resmi SINTA Kemdiktisaintek.
+            </p>
+
+            <ol>
+                <li>Pilih tab <strong>SINTA Kemdiktisaintek</strong> pada dashboard ekstensi.</li>
                 <li>
                     Ketik atau tempel daftar nama pada kolom input teks (satu nama per baris), contoh:
                     <pre>Dr. Tio Haidar Hanif, M.Kom.
@@ -394,42 +410,45 @@ Siti Aminah, S.Pd., M.Pd.</pre>
                         <li><strong>Bersihkan Gelar:</strong> Disarankan selalu aktif agar gelar akademik diabaikan saat pencarian sehingga hasil lebih akurat, sementara nama asli tetap tersimpan di tabel hasil.</li>
                         <li><strong>Filter Kampus:</strong> Masukkan nama perguruan tinggi jika ingin menyaring author hanya dari kampus tertentu. Kosongkan jika ingin mencari di seluruh kampus.</li>
                         <li><strong>Hapus Duplikat:</strong> Menghilangkan entri nama ganda sebelum pencarian diproses.</li>
-                        <li><strong>Jeda Antar Permintaan:</strong> Jeda waktu default 1 detik per nama untuk menjaga kestabilan permintaan ke server SINTA.</li>
+                        <li><strong>Jeda Antar Permintaan:</strong> Jeda waktu default 1 detik per nama.</li>
                     </ul>
                 </li>
                 <li>Klik tombol <strong>Mulai Pencarian SINTA</strong>.</li>
             </ol>
-
-            <div class="note-box">
-                <strong>Status Perlu Konfirmasi:</strong> Jika ditemukan beberapa kandidat author dengan nama yang serupa, status baris akan berwarna kuning (<em>Perlu Konfirmasi</em>). Klik tombol <em>Pilih Kandidat</em> pada baris tersebut untuk memilih profil yang benar, atau klik <em>Tidak Ada yang Benar</em> jika bukan profil yang dicari.
-            </div>
         </section>
 
-        <!-- Section 3: Pencarian Scopus -->
-        <section id="scopus" class="doc-section">
-            <h2>3. Cara Menggunakan Pencarian Scopus</h2>
+        <!-- Section 4: Pencarian GARUDA -->
+        <section id="garuda" class="doc-section">
+            <h2>4. Cara Menggunakan Pencarian GARUDA</h2>
             <p>
-                Tab Scopus digunakan untuk mencari data profil author di Scopus Elsevier, termasuk Scopus Author ID, afiliasi, kota, negara, jumlah dokumen terindeks, dan h-index Scopus.
+                Tab GARUDA digunakan khusus untuk mencari profil author pada portal resmi Garba Rujukan Digital (GARUDA) Kemdiktisaintek (<code>garuda.kemdiktisaintek.go.id</code>).
             </p>
 
             <ol>
-                <li>Pilih tab <strong>Scopus</strong> pada dashboard ekstensi.</li>
-                <li>Masukkan daftar nama pada kolom input teks.</li>
-                <li>
-                    Sistem akan otomatis memisahkan nama menjadi Nama Depan (<em>First Name</em>) dan Nama Belakang (<em>Last Name</em>) sesuai struktur pencarian baku Scopus.
-                </li>
-                <li>Klik tombol <strong>Mulai Pencarian Scopus</strong>.</li>
-                <li>
-                    Ekstensi akan membuka satu tab Scopus di latar belakang untuk membaca data hasil pencarian secara otomatis, dan menutup tab tersebut setelah seluruh antrian selesai.
-                </li>
+                <li>Pilih tab <strong>GARUDA Kemdiktisaintek</strong> pada dashboard ekstensi.</li>
+                <li>Ketik atau tempel daftar nama pada kolom input teks (satu nama per baris).</li>
+                <li>Klik tombol <strong>Mulai Pencarian Garuda</strong>.</li>
+                <li>Hasil pencarian akan memunculkan Nama di Garuda, Garuda ID, Afiliasi, Jumlah Dokumen, dan tautan langsung ke profil.</li>
             </ol>
-
-           
         </section>
 
-        <!-- Section 4: Salin ke Spreadsheet -->
+        <!-- Section 5: Pencarian Scopus -->
+        <section id="scopus" class="doc-section">
+            <h2>5. Cara Menggunakan Pencarian Scopus</h2>
+            <p>
+                Tab Scopus digunakan khusus jika Anda hanya ingin mencari data profil author di Scopus Elsevier (Scopus Author ID, afiliasi, kota, negara, dokumen, dan h-index).
+            </p>
+
+            <ol>
+                <li>Pilih tab <strong>SCOPUS (Elsevier)</strong> pada dashboard ekstensi.</li>
+                <li>Masukkan daftar nama pada kolom input teks.</li>
+                <li>Klik tombol <strong>Mulai Pencarian Scopus</strong>.</li>
+            </ol>
+        </section>
+
+        <!-- Section 5: Salin ke Spreadsheet -->
         <section id="ekspor" class="doc-section">
-            <h2>4. Menyalin Hasil ke Excel atau Google Sheets</h2>
+            <h2>5. Menyalin Hasil ke Excel atau Google Sheets</h2>
             <p>
                 Setelah pencarian selesai, data tabel dapat dipindahkan menggunakan salah satu dari dua metode:
             </p>
@@ -444,11 +463,9 @@ Siti Aminah, S.Pd., M.Pd.</pre>
             </ul>
         </section>
 
-        <!-- Section 5: Catatan Teknis & FAQ -->
+        <!-- Section 6: Catatan Teknis & FAQ -->
         <section id="faq" class="doc-section">
-            <h2>5. Catatan Teknis dan Kendala Umum</h2>
-
-         
+            <h2>6. Catatan Teknis dan Kendala Umum</h2>
 
             <h3>Mengapa status author "Tidak Ditemukan"?</h3>
             <p>
@@ -457,16 +474,14 @@ Siti Aminah, S.Pd., M.Pd.</pre>
             <ul>
                 <li>Perbedaan ejaan antara nama yang dimasukkan dengan yang terdaftar di basis data (misalnya singkatan nama).</li>
                 <li>Filter nama kampus terlalu spesifik atau penulisan nama kampusnya berbeda. Coba kosongkan kolom filter kampus.</li>
-                <li>Author yang bersangkutan memang belum terdaftar di pangkalan data SINTA atau Scopus.</li>
+                <li>Author yang bersangkutan memang belum terdaftar di pangkalan data SINTA, GARUDA, atau Scopus.</li>
             </ul>
-
-          
         </section>
 
     </main>
 
     <footer>
-        <p>Ekstensi Pencari Author SINTA & Scopus &bull; <a href="https://github.com/atiohaidar/Pencari-Author" target="_blank" rel="noopener">github.com/atiohaidar/Pencari-Author</a></p>
+        <p>Ekstensi Pencari Author SINTA, GARUDA & Scopus &bull; <a href="https://github.com/atiohaidar/Pencari-Author" target="_blank" rel="noopener">github.com/atiohaidar/Pencari-Author</a></p>
     </footer>
 
 </body>
