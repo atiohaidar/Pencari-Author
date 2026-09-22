@@ -60,3 +60,20 @@ Pemasangan hanya dilakukan **sekali saja** dan memakan waktu kurang dari 1 menit
 5. Klik **"▶ Mulai Pencarian"**.
 6. Jika ada nama dengan beberapa kandidat mirip, klik kartu kandidat yang sesuai.
 7. Setelah selesai, klik **"📋 Salin Tabel"** untuk paste ke Excel / Google Sheets, atau **"📥 Unduh CSV"**.
+
+---
+
+## Cara Mengaktifkan GitHub Pages (Untuk Landing Page & Download Online)
+
+1. Push repositori ini ke GitHub Anda.
+2. Buka halaman repository di GitHub $\rightarrow$ klik tab **Settings**.
+3. Pada menu sebelah kiri, klik **Pages**.
+4. Di bagian **Build and deployment**:
+   - **Source**: Pilih *Deploy from a branch*.
+   - **Branch**: Pilih `main` dan folder `/ (root)`.
+   - Klik **Save**.
+5. Tunggu 1 menit, web panduan Anda akan online di:
+   ```
+   https://<username>.github.io/<nama-repo>/
+   ```
+6. Siapa pun (termasuk teman MacBook Anda) bisa langsung membuka link tersebut untuk membaca tutorial dan men-download file ekstensi `.zip` secara langsung!

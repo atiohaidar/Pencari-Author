@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencari Author SINTA & Scopus - Pencocok & Resolusi Nama</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="icon.png" type="image/png">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="container header-content">
+            <div class="brand">
+                <div class="brand-icon">S</div>
+                <div>
+                    <h1>Pencari Author SINTA & Scopus</h1>
+                    <p>Pencari & Pencocok Profil Author SINTA Kemdiktisaintek dan Scopus Elsevier</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <a href="index.html" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                    📖 Panduan & Download
+                </a>
+                <span id="serverStatusBadge" class="badge-server">
+                    <span class="dot"></span> Memeriksa Mode Ekstensi...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Non-Extension Mode Notice Banner (Hidden when running as Chrome Extension) -->
+        <div id="standaloneNotice" class="alert-banner hidden">
+            <div class="alert-icon">💡</div>
+            <div class="alert-body">
+                <strong>Cara Menggunakan di MacBook / Windows (Tanpa Perlu Instal Apapun):</strong>
+                <p style="margin: 4px 0 6px 0;">Halaman ini saat ini dibuka langsung sebagai file biasa (<code>file://</code>). Agar dapat mencari author SINTA & Scopus secara otomatis tanpa dicegat izin browser:</p>
+                <ol style="margin: 0 0 0 20px; line-height: 1.6;">
+                    <li>Buka browser <strong>Google Chrome</strong> lalu buka tab: <code>chrome://extensions</code></li>
+                    <li>Aktifkan sakelar <strong>Developer mode</strong> (Mode pengembang) di pojok kanan atas.</li>
+                    <li>Klik tombol <strong>Load unpacked</strong> (Muat yang belum dibongkar) lalu pilih folder ini.</li>
+                    <li>Klik icon ekstensi di toolbar Google Chrome untuk mulai menggunakan!</li>
+                </ol>
+                <div style="margin-top: 10px;">
+                    <a href="index.html" target="_blank" style="color: #92400e; font-weight: 600; text-decoration: underline;">
+                        ➔ Buka Panduan Lengkap & Download ZIP (index.html)
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Source Selector Tabs -->
+        <div class="source-tabs">
+            <button type="button" id="tabSinta" class="source-tab active">
+                <span class="source-icon">🏛️</span>
+                <div>
+                    <div class="source-title">SINTA Kemdiktisaintek</div>
+                    <div class="source-desc">Pencari Author SINTA & Skor Sitasi Nasional</div>
+                </div>
+            </button>
+            <button type="button" id="tabScopus" class="source-tab">
+                <span class="source-icon">🔬</span>
+                <div>
+                    <div class="source-title">SCOPUS (Elsevier)</div>
+                    <div class="source-desc">Pencari Author Scopus, Dokumen & h-index Internasional</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Section 1: Input & Configuration -->
+        <section class="card">
+            <div class="card-title">
+                <span id="section1Title">1. Masukkan Daftar Nama (Pencarian SINTA)</span>
+                <div class="btn-group">
+                    <button type="button" id="btnSampleNames" class="btn btn-secondary btn-sm">Gunakan Contoh Nama</button>
+                    <label class="btn btn-secondary btn-sm" style="margin-bottom: 0; cursor: pointer;">
+                        Upload File (.txt/.csv)
+                        <input type="file" id="fileUploadInput" accept=".txt,.csv" style="display: none;">
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Names Textarea -->
+                <div>
+                    <label for="namesInput">Daftar Nama yang Dicari (1 nama per baris):</label>
+                    <textarea id="namesInput" placeholder="Contoh:&#10;Dr. Budi Santoso, M.Kom.&#10;Prof. Ir. Siti Aminah, Ph.D.&#10;Haidar Fari Aditya"></textarea>
+                </div>
+
+                <!-- Parameters & Options -->
+                <div>
+                    <div class="form-group">
+                        <label for="delaySelect">Jeda Waktu Antar-Pencarian (Delay):</label>
+                        <select id="delaySelect">
+                            <option value="800">800 ms (Cepat)</option>
+                            <option value="1000" selected>1000 ms (1 Detik - Direkomendasikan)</option>
+                            <option value="1500">1500 ms (1.5 Detik - Lebih Aman)</option>
+                            <option value="2000">2000 ms (2 Detik - Sangat Aman)</option>
+                        </select>
+                        <span class="text-muted text-sm">Menghindari pemblokiran IP oleh server saat memproses banyak nama.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="campusFilter">Filter Kampus / Afiliasi (Opsional):</label>
+                        <input type="text" id="campusFilter" placeholder="Misal: Universitas Indonesia, ITB, UGM...">
+                        <span class="text-muted text-sm">Hanya pilih kandidat yang berasal dari kampus tersebut.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-check">
+                            <input type="checkbox" id="stripTitlesCheck" checked>
+                            <span><strong>Bersihkan Gelar Akademik Otomatis</strong> (Menghapus Prof, Dr, Ir, S.T., M.Kom, Ph.D, dll. untuk query pencarian)</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-check">
+                            <input type="checkbox" id="removeDuplicatesCheck" checked>
+                            <span><strong>Hapus Duplikat Otomatis</strong> (Menghilangkan nama ganda yang sama dari daftar sebelum dicari)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group" style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+                <button type="button" id="btnStart" class="btn btn-primary">
+                    ▶ Mulai Pencarian SINTA
+                </button>
+                <button type="button" id="btnPause" class="btn btn-warning" disabled>
+                    ⏸ Jeda
+                </button>
+                <button type="button" id="btnReset" class="btn btn-secondary" disabled>
+                    ⏹ Reset Data
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 2: Progress & Stats Dashboard -->
+        <section class="card">
+            <div class="card-title">
+                <span>2. Status Proses Pencarian</span>
+                <span id="progressText" class="text-muted text-sm">0%</span>
+            </div>
+
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <div class="stat-pills">
+                <div class="stat-pill">
+                    <span class="stat-label">Total Nama</span>
+                    <span id="statTotal" class="stat-value">0</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Selesai</span>
+                    <span id="statDone" class="stat-value">0</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Cocok Pasti</span>
+                    <span id="statMatched" class="stat-value text-success">0</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Perlu Review</span>
+                    <span id="statReview" class="stat-value" style="color: var(--warning-text);">0</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">Tidak Ditemukan</span>
+                    <span id="statNotFound" class="stat-value text-danger">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Review Alert Banner (When multiple candidates need user confirmation) -->
+        <div id="reviewBanner" class="review-box hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <strong style="color: var(--warning-text); font-size: 14px;">⚠ Perhatian: Terdapat <span id="reviewCount">0</span> nama yang memerlukan konfirmasi Anda</strong>
+                    <p style="color: var(--text-secondary); font-size: 12px; margin-top: 2px;">
+                        Ditemukan lebih dari 1 kandidat atau skor kemiripan nama bervariasi.
+                    </p>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="btnReviewNext" class="btn btn-warning btn-sm">
+                        Review Satu Per Satu
+                    </button>
+                    <button type="button" id="btnAcceptAllTop" class="btn btn-secondary btn-sm">
+                        Pilih Rekomendasi Teratas untuk Semua
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Results Table & CSV Export -->
+        <section class="card">
+            <div class="table-filter-bar">
+                <div class="card-title" style="margin-bottom: 0;">
+                    <span>3. Tabel Hasil Pencarian</span>
+                </div>
+
+                <div class="btn-group" style="align-items: center;">
+                    <input type="text" id="tableSearchInput" class="search-table-input" placeholder="Filter di tabel ini...">
+                    
+                    <select id="statusFilter" style="width: auto;">
+                        <option value="all">Semua Status</option>
+                        <option value="matched">Cocok (Matched)</option>
+                        <option value="need_review">Perlu Review</option>
+                        <option value="not_found">Tidak Ditemukan</option>
+                        <option value="skipped">Dilewati / Kosong</option>
+                    </select>
+
+                    <button type="button" id="btnCopyTable" class="btn btn-secondary btn-sm">
+                        📋 Salin Tabel
+                    </button>
+                    <button type="button" id="btnExportCSV" class="btn btn-primary btn-sm">
+                        📥 Unduh CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead id="resultsTableHead">
+                        <!-- Rendered dynamically by app.js -->
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <tr>
+                            <td colspan="11" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                Belum ada data. Masukkan daftar nama di atas lalu klik "Mulai Pencarian SINTA".
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Resolving Candidate Selection -->
+    <div id="reviewModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modalTitle">Pilih Kandidat SINTA</h3>
+                    <p id="modalSubtitle" class="text-muted text-sm"></p>
+                </div>
+                <button type="button" id="btnModalCloseHeader" class="btn btn-secondary btn-sm">✕</button>
+            </div>
+            
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                    Klik salah satu kartu di bawah ini untuk memilih author yang sesuai, atau klik tombol "Tidak Ada yang Benar" jika bukan salah satunya:
+                </p>
+                <div id="candidateCardsContainer" class="candidate-grid"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnModalChooseNone" class="btn btn-danger btn-sm">
+                    ✕ Tidak Ada yang Benar (Tandai Kosong)
+                </button>
+                <button type="button" id="btnModalCloseFooter" class="btn btn-secondary btn-sm">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>

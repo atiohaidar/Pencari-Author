@@ -8,7 +8,7 @@ let currentPendingRequest = null;
 
 // 1. Click extension action icon -> Open full Dashboard tab
 chrome.action.onClicked.addListener(() => {
-    const dashboardUrl = chrome.runtime.getURL('index.html');
+    const dashboardUrl = chrome.runtime.getURL('dashboard.html');
     chrome.tabs.query({}, (tabs) => {
         const existingTab = tabs.find(t => t.url && t.url.startsWith(dashboardUrl));
         if (existingTab) {
