@@ -86,48 +86,122 @@ function splitFirstLastName(cleanedName) {
 }
 
 // ============================================================================
-// 2. String Similarity (Levenshtein + Token Overlap)
+// 2. String Similarity (Inversion-Aware Levenshtein + Token Set Overlap)
 // ============================================================================
-function computeSimilarity(str1, str2) {
-    if (!str1 || !str2) return 0;
-    const s1 = str1.toLowerCase().trim();
-    const s2 = str2.toLowerCase().trim();
+function normalizeNameForCompare(s) {
+    return (s || '')
+        .toLowerCase()
+        .replace(/[,.\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
 
-    if (s1 === s2) return 100;
-
-    const words1 = s1.split(/\s+/).filter(Boolean);
-    const words2 = s2.split(/\s+/).filter(Boolean);
-
-    let matchCount = 0;
-    words1.forEach(w1 => {
-        if (words2.some(w2 => w2 === w1 || (w1.length > 3 && w2.includes(w1)) || (w2.length > 3 && w1.includes(w2)))) {
-            matchCount++;
-        }
-    });
-
-    const tokenScore = (matchCount / Math.max(words1.length, words2.length)) * 100;
-
-    // Levenshtein distance
-    const track = Array(s2.length + 1).fill(null).map(() =>
-        Array(s1.length + 1).fill(null));
-    for (let i = 0; i <= s1.length; i += 1) track[0][i] = i;
-    for (let j = 0; j <= s2.length; j += 1) track[j][0] = j;
-
-    for (let j = 1; j <= s2.length; j += 1) {
-        for (let i = 1; i <= s1.length; i += 1) {
-            const indicator = s1[i - 1] === s2[j - 1] ? 0 : 1;
+function calcLevenshteinDist(a, b) {
+    if (a === b) return 100;
+    if (!a.length || !b.length) return 0;
+    const track = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+    for (let i = 0; i <= a.length; i++) track[0][i] = i;
+    for (let j = 0; j <= b.length; j++) track[j][0] = j;
+    for (let j = 1; j <= b.length; j++) {
+        for (let i = 1; i <= a.length; i++) {
+            const ind = a[i - 1] === b[j - 1] ? 0 : 1;
             track[j][i] = Math.min(
                 track[j][i - 1] + 1,
                 track[j - 1][i] + 1,
-                track[j - 1][i - 1] + indicator
+                track[j - 1][i - 1] + ind
             );
         }
     }
-    const levDist = track[s2.length][s1.length];
-    const maxLen = Math.max(s1.length, s2.length);
-    const levScore = ((maxLen - levDist) / maxLen) * 100;
+    const dist = track[b.length][a.length];
+    const maxLen = Math.max(a.length, b.length);
+    return ((maxLen - dist) / maxLen) * 100;
+}
 
-    return Math.round((tokenScore * 0.6) + (levScore * 0.4));
+function calcTokenOverlapScore(words1, words2) {
+    if (!words1.length || !words2.length) return 0;
+    let matches = 0;
+    const used = new Set();
+
+    words1.forEach(w1 => {
+        // 1. Exact token match
+        const exactIdx = words2.findIndex((w2, i) => !used.has(i) && w2 === w1);
+        if (exactIdx !== -1) {
+            matches += 1.0;
+            used.add(exactIdx);
+            return;
+        }
+
+        // 2. Initial match (e.g. 'h' matches 'haidar' or vice-versa)
+        const initialIdx = words2.findIndex((w2, i) => {
+            if (used.has(i)) return false;
+            if (w1.length === 1 && w2.startsWith(w1)) return true;
+            if (w2.length === 1 && w1.startsWith(w2)) return true;
+            return false;
+        });
+        if (initialIdx !== -1) {
+            matches += 0.85;
+            used.add(initialIdx);
+            return;
+        }
+
+        // 3. Substring match for longer tokens
+        const subIdx = words2.findIndex((w2, i) => {
+            if (used.has(i)) return false;
+            return (w1.length > 3 && w2.includes(w1)) || (w2.length > 3 && w1.includes(w2));
+        });
+        if (subIdx !== -1) {
+            matches += 0.75;
+            used.add(subIdx);
+        }
+    });
+
+    return (matches / Math.max(words1.length, words2.length)) * 100;
+}
+
+function computeSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+
+    const n1 = normalizeNameForCompare(str1);
+    const n2 = normalizeNameForCompare(str2);
+
+    // Exact direct match
+    if (n1 === n2) return 100;
+
+    // Check Scopus flipped format ('Hanif, Tio Haidar' -> 'Tio Haidar Hanif')
+    let n2Flipped = '';
+    if (str2.includes(',')) {
+        const parts = str2.split(',');
+        const last = parts[0].trim();
+        const first = parts.slice(1).join(' ').trim();
+        n2Flipped = normalizeNameForCompare(`${first} ${last}`);
+        if (n1 === n2Flipped) return 100;
+    }
+
+    const w1 = n1.split(' ').filter(Boolean);
+    const w2 = n2.split(' ').filter(Boolean);
+
+    // Exact word token set match (identical words in any order)
+    const s1Sorted = [...w1].sort().join(' ');
+    const s2Sorted = [...w2].sort().join(' ');
+    if (s1Sorted === s2Sorted) return 100;
+
+    // Direct similarity
+    const tokenDirect = calcTokenOverlapScore(w1, w2);
+    const simDirect = (tokenDirect * 0.6) + (calcLevenshteinDist(n1, n2) * 0.4);
+
+    // Flipped similarity (for Scopus Last, First)
+    let simFlipped = 0;
+    if (n2Flipped) {
+        const w2Flipped = n2Flipped.split(' ').filter(Boolean);
+        const tokenFlipped = calcTokenOverlapScore(w1, w2Flipped);
+        simFlipped = (tokenFlipped * 0.6) + (calcLevenshteinDist(n1, n2Flipped) * 0.4);
+    }
+
+    // Sorted tokens similarity
+    const tokenSorted = calcTokenOverlapScore(w1, w2);
+    const simSorted = (tokenSorted * 0.6) + (calcLevenshteinDist(s1Sorted, s2Sorted) * 0.4);
+
+    return Math.round(Math.max(simDirect, simFlipped, simSorted));
 }
 
 // ============================================================================
@@ -1163,7 +1237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (state.isExtensionMode) {
         if (badge) {
-            badge.innerHTML = '<span class="dot"></span> Mode Ekstensi Chrome Siap (Zero-Install)';
+            badge.innerHTML = '<span class="dot"></span>';
             badge.className = 'badge-server badge-success';
         }
         if (notice) notice.classList.add('hidden');
