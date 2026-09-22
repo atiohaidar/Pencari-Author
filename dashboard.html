@@ -21,7 +21,8 @@
             </div>
             <div class="header-meta">
                 <a href="index.html" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                    📖 Panduan & Download
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    Panduan & Download
                 </a>
                 <span id="serverStatusBadge" class="badge-server">
                     <span class="dot"></span> Memeriksa Mode Ekstensi...
@@ -34,7 +35,9 @@
 
         <!-- Non-Extension Mode Notice Banner (Hidden when running as Chrome Extension) -->
         <div id="standaloneNotice" class="alert-banner hidden">
-            <div class="alert-icon">💡</div>
+            <div class="alert-icon">
+                <svg class="icon icon-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </div>
             <div class="alert-body">
                 <strong>Cara Menggunakan di MacBook / Windows (Tanpa Perlu Instal Apapun):</strong>
                 <p style="margin: 4px 0 6px 0;">Halaman ini saat ini dibuka langsung sebagai file biasa (<code>file://</code>). Agar dapat mencari author SINTA & Scopus secara otomatis tanpa dicegat izin browser:</p>
@@ -46,7 +49,7 @@
                 </ol>
                 <div style="margin-top: 10px;">
                     <a href="index.html" target="_blank" style="color: #92400e; font-weight: 600; text-decoration: underline;">
-                        ➔ Buka Panduan Lengkap & Download ZIP (index.html)
+                        Buka Panduan Lengkap & Download ZIP (index.html)
                     </a>
                 </div>
             </div>
@@ -55,17 +58,19 @@
         <!-- Source Selector Tabs -->
         <div class="source-tabs">
             <button type="button" id="tabSinta" class="source-tab active">
-                <span class="source-icon">🏛️</span>
+                <span class="source-icon">
+                    <svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"></line><line x1="6" y1="18" x2="6" y2="11"></line><line x1="10" y1="18" x2="10" y2="11"></line><line x1="14" y1="18" x2="14" y2="11"></line><line x1="18" y1="18" x2="18" y2="11"></line><polygon points="12 2 20 7 4 7"></polygon></svg>
+                </span>
                 <div>
                     <div class="source-title">SINTA Kemdiktisaintek</div>
-                    <div class="source-desc">Pencari Author SINTA & Skor Sitasi Nasional</div>
                 </div>
             </button>
             <button type="button" id="tabScopus" class="source-tab">
-                <span class="source-icon">🔬</span>
+                <span class="source-icon">
+                    <svg class="icon-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </span>
                 <div>
                     <div class="source-title">SCOPUS (Elsevier)</div>
-                    <div class="source-desc">Pencari Author Scopus, Dokumen & h-index Internasional</div>
                 </div>
             </button>
         </div>
@@ -128,13 +133,16 @@
             <!-- Action Buttons -->
             <div class="btn-group" style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-color);">
                 <button type="button" id="btnStart" class="btn btn-primary">
-                    ▶ Mulai Pencarian SINTA
+                    <svg class="icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    <span id="btnStartText">Mulai Pencarian SINTA</span>
                 </button>
                 <button type="button" id="btnPause" class="btn btn-warning" disabled>
-                    ⏸ Jeda
+                    <svg class="icon" id="pauseIcon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                    <span id="btnPauseText">Jeda</span>
                 </button>
                 <button type="button" id="btnReset" class="btn btn-secondary" disabled>
-                    ⏹ Reset Data
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                    Reset Data
                 </button>
             </div>
         </section>
@@ -178,7 +186,7 @@
         <div id="reviewBanner" class="review-box hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div>
-                    <strong style="color: var(--warning-text); font-size: 14px;">⚠ Perhatian: Terdapat <span id="reviewCount">0</span> nama yang memerlukan konfirmasi Anda</strong>
+                    <strong style="color: var(--warning-text); font-size: 14px;">Perhatian: Terdapat <span id="reviewCount">0</span> nama yang memerlukan konfirmasi Anda</strong>
                     <p style="color: var(--text-secondary); font-size: 12px; margin-top: 2px;">
                         Ditemukan lebih dari 1 kandidat atau skor kemiripan nama bervariasi.
                     </p>
@@ -213,10 +221,12 @@
                     </select>
 
                     <button type="button" id="btnCopyTable" class="btn btn-secondary btn-sm">
-                        📋 Salin Tabel
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Salin Tabel
                     </button>
                     <button type="button" id="btnExportCSV" class="btn btn-primary btn-sm">
-                        📥 Unduh CSV
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Unduh CSV
                     </button>
                 </div>
             </div>
@@ -247,7 +257,9 @@
                     <h3 id="modalTitle">Pilih Kandidat SINTA</h3>
                     <p id="modalSubtitle" class="text-muted text-sm"></p>
                 </div>
-                <button type="button" id="btnModalCloseHeader" class="btn btn-secondary btn-sm">✕</button>
+                <button type="button" id="btnModalCloseHeader" class="btn btn-secondary btn-sm" aria-label="Tutup">
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
             
             <div class="modal-body">
@@ -259,7 +271,7 @@
 
             <div class="modal-footer">
                 <button type="button" id="btnModalChooseNone" class="btn btn-danger btn-sm">
-                    ✕ Tidak Ada yang Benar (Tandai Kosong)
+                    Tidak Ada yang Benar (Tandai Kosong)
                 </button>
                 <button type="button" id="btnModalCloseFooter" class="btn btn-secondary btn-sm">
                     Tutup

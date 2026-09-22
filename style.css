@@ -211,9 +211,39 @@ header {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), var(--shadow-sm);
 }
 
+.icon {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    display: inline-block;
+    vertical-align: -2px;
+    flex-shrink: 0;
+}
+
+.icon-lg {
+    width: 20px;
+    height: 20px;
+}
+
 .source-icon {
-    font-size: 24px;
-    line-height: 1;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background: #f1f5f9;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.source-tab.active .source-icon {
+    background: #eff6ff;
+    color: var(--primary);
 }
 
 .source-title {

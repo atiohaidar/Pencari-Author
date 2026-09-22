@@ -379,17 +379,19 @@ function switchSource(source) {
     const btnStart = document.getElementById('btnStart');
     const delaySelect = document.getElementById('delaySelect');
 
+    const btnStartText = document.getElementById('btnStartText');
+
     if (source === 'sinta') {
         tabSinta.classList.add('active');
         tabScopus.classList.remove('active');
         secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian SINTA)';
-        btnStart.textContent = '▶ Mulai Pencarian SINTA';
+        if (btnStartText) btnStartText.textContent = 'Mulai Pencarian SINTA';
         delaySelect.value = '1000';
     } else {
         tabScopus.classList.add('active');
         tabSinta.classList.remove('active');
         secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian SCOPUS)';
-        btnStart.textContent = '▶ Mulai Pencarian Scopus';
+        if (btnStartText) btnStartText.textContent = 'Mulai Pencarian Scopus';
         delaySelect.value = '1500'; // Recommended 1.5s for Scopus tab navigation
     }
 
@@ -546,11 +548,16 @@ async function runQueue() {
 function togglePause() {
     state.isPaused = !state.isPaused;
     const btn = document.getElementById('btnPause');
+    const textEl = document.getElementById('btnPauseText');
+    const iconEl = document.getElementById('pauseIcon');
+
     if (state.isPaused) {
-        btn.textContent = '▶ Lanjutkan';
+        if (textEl) textEl.textContent = 'Lanjutkan';
+        if (iconEl) iconEl.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
         btn.classList.replace('btn-warning', 'btn-primary');
     } else {
-        btn.textContent = '⏸ Jeda';
+        if (textEl) textEl.textContent = 'Jeda';
+        if (iconEl) iconEl.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
         btn.classList.replace('btn-primary', 'btn-warning');
     }
 }
@@ -595,7 +602,10 @@ function updateUIControls() {
     } else {
         btnStart.disabled = false;
         btnPause.disabled = true;
-        btnPause.textContent = '⏸ Jeda';
+        const textEl = document.getElementById('btnPauseText');
+        const iconEl = document.getElementById('pauseIcon');
+        if (textEl) textEl.textContent = 'Jeda';
+        if (iconEl) iconEl.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
         btnPause.classList.replace('btn-primary', 'btn-warning');
         btnReset.disabled = state.items.length === 0;
         namesInput.disabled = false;
@@ -730,16 +740,16 @@ function renderTable() {
                 statusBadge = '<span class="badge badge-warning"><span class="dot"></span> Mencari...</span>';
                 break;
             case 'matched':
-                statusBadge = `<span class="badge badge-success">✓ Cocok (${c?.similarity || 0}%)</span>`;
+                statusBadge = `<span class="badge badge-success">Cocok (${c?.similarity || 0}%)</span>`;
                 break;
             case 'need_review':
-                statusBadge = `<span class="badge badge-warning">⚠ ${item.candidates.length} Kandidat</span>`;
+                statusBadge = `<span class="badge badge-warning">${item.candidates.length} Kandidat</span>`;
                 break;
             case 'not_found':
-                statusBadge = '<span class="badge badge-danger">✕ Tidak Ditemukan</span>';
+                statusBadge = '<span class="badge badge-danger">Tidak Ditemukan</span>';
                 break;
             case 'skipped':
-                statusBadge = '<span class="badge badge-neutral">Dilewati / Kosong</span>';
+                statusBadge = '<span class="badge badge-neutral">Kosong</span>';
                 break;
         }
 
