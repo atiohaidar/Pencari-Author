@@ -3,26 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencari Author SINTA & Scopus - Panduan & Download Ekstensi</title>
+    <title>Panduan dan Pemasangan Ekstensi Pencari Author SINTA & Scopus</title>
     <style>
         :root {
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --text-light: #64748b;
-            --border: #e2e8f0;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --bg: #f9fafb;
+            --surface: #ffffff;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --border-dark: #d1d5db;
+            --primary: #1d4ed8;
+            --primary-hover: #1e40af;
             --primary-bg: #eff6ff;
-            --success-bg: #ecfdf5;
-            --success-border: #a7f3d0;
-            --success-text: #065f46;
-            --warning-bg: #fffbeb;
-            --warning-border: #fde68a;
-            --warning-text: #92400e;
-            --radius: 8px;
-            --radius-lg: 12px;
+            --code-bg: #f3f4f6;
+            --radius: 6px;
         }
 
         * {
@@ -41,51 +36,91 @@
         }
 
         /* Top Bar */
-        .topbar {
-            background: #ffffff;
+        .header-bar {
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 12px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 50;
+            padding: 12px 24px;
         }
 
-        .topbar-content {
-            max-width: 960px;
+        .header-inner {
+            max-width: 860px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 16px;
         }
 
-        .brand-title {
-            font-size: 16px;
-            font-weight: 700;
+        .header-title {
+            font-size: 15px;
+            font-weight: 600;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
             text-decoration: none;
         }
 
-        .topbar-actions {
+        .header-nav {
             display: flex;
             align-items: center;
+            gap: 14px;
+        }
+
+        .header-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Container */
+        .content-container {
+            max-width: 860px;
+            margin: 28px auto 0;
+            padding: 0 20px;
+        }
+
+        /* Intro Box */
+        .doc-intro {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .doc-intro h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .doc-intro p.description {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
             gap: 10px;
+            margin-bottom: 14px;
         }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            padding: 8px 14px;
-            border-radius: var(--radius);
+            display: inline-block;
             font-size: 13px;
             font-weight: 600;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            text-decoration: none;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: background 0.15s ease, border-color 0.15s ease;
         }
 
         .btn-primary {
@@ -100,523 +135,366 @@
         }
 
         .btn-secondary {
-            background: #ffffff;
+            background: var(--surface);
             color: var(--text-main);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-dark);
         }
 
         .btn-secondary:hover {
-            background: #f1f5f9;
+            background: var(--code-bg);
         }
 
-        /* Layout Container */
-        .container {
-            max-width: 960px;
-            margin: 24px auto 0;
-            padding: 0 20px;
-        }
-
-        /* Hero / Download Box */
-        .hero-box {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 32px 28px;
-            margin-bottom: 24px;
-        }
-
-        .tag-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--primary-bg);
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
-            padding: 3px 10px;
-            border-radius: 9999px;
+        .env-note {
             font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
+            color: var(--text-light);
         }
 
-        .hero-box h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
+        /* Quick Jumps */
+        .table-of-contents {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .hero-box p.lead {
-            color: var(--text-muted);
-            font-size: 16px;
-            line-height: 1.6;
+        .table-of-contents a {
+            font-size: 13px;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary-bg);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+
+        /* Content Sections */
+        .doc-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
             margin-bottom: 20px;
         }
 
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .btn-large {
-            padding: 12px 20px;
-            font-size: 15px;
-            border-radius: var(--radius);
-        }
-
-        .zero-install-note {
-            font-size: 13px;
-            color: var(--text-light);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Quick Navigation Bar */
-        .nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 20px;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-        }
-
-        .nav-links a {
-            display: inline-block;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            text-decoration: none;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .nav-links a:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: #ffffff;
-        }
-
-        /* Section Cards */
-        .section-card {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 26px;
-            margin-bottom: 24px;
-        }
-
-        .section-card h2 {
-            font-size: 19px;
+        .doc-section h2 {
+            font-size: 17px;
             font-weight: 700;
-            margin-bottom: 14px;
-            padding-bottom: 10px;
+            margin-bottom: 12px;
+            color: var(--text-main);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            padding-bottom: 8px;
         }
 
-        .section-card h3 {
-            font-size: 16px;
+        .doc-section h3 {
+            font-size: 14px;
             font-weight: 600;
-            margin: 18px 0 8px;
+            margin: 16px 0 8px;
             color: var(--text-main);
         }
 
-        /* Steps */
-        ol.steps {
-            margin-left: 20px;
-            margin-bottom: 16px;
+        .doc-section p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 12px;
         }
 
-        ol.steps li {
-            margin-bottom: 10px;
-            padding-left: 4px;
-        }
-
-        ul.details {
+        ol, ul {
             margin-left: 20px;
             margin-bottom: 14px;
+            color: var(--text-muted);
+            font-size: 14px;
         }
 
-        ul.details li {
+        li {
             margin-bottom: 6px;
         }
 
-        /* Inline Code & Code Blocks */
         code {
-            background: #f1f5f9;
-            color: #0f172a;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background: var(--code-bg);
             padding: 2px 6px;
             border-radius: 4px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 13px;
-            border: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: var(--text-main);
+            border: 1px solid var(--border);
         }
 
-        /* Callout Banners */
-        .callout {
-            padding: 14px 16px;
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
+            padding: 10px 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            overflow-x: auto;
+            color: var(--text-main);
+        }
+
+        .note-box {
+            background: #fefce8;
+            border: 1px solid #fef08a;
+            border-radius: var(--radius);
+            padding: 12px 16px;
             margin: 14px 0;
-            font-size: 14px;
+            font-size: 13px;
+            color: #854d0e;
             line-height: 1.5;
         }
 
-        .callout-success {
-            background: var(--success-bg);
-            border: 1px solid var(--success-border);
-            color: var(--success-text);
-        }
-
-        .callout-warning {
-            background: var(--warning-bg);
-            border: 1px solid var(--warning-border);
-            color: var(--warning-text);
-        }
-
-        .callout-info {
-            background: var(--primary-bg);
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
-        }
-
-        /* Platform Grid */
-        .platform-grid {
+        .os-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-top: 14px;
         }
 
-        @media (max-width: 720px) {
-            .platform-grid {
+        @media (max-width: 680px) {
+            .os-columns {
                 grid-template-columns: 1fr;
             }
         }
 
-        .platform-col {
+        .os-box {
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 18px;
-            background: #fafbfd;
+            padding: 16px;
+            background: #fafafa;
         }
 
-        .platform-header {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .os-box-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-main);
         }
 
         kbd {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 2px 6px;
+            background: #ffffff;
+            border: 1px solid var(--border-dark);
+            border-radius: 3px;
+            padding: 1px 5px;
             font-size: 12px;
             font-family: inherit;
         }
 
-        /* Feature summary grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin: 16px 0;
-        }
-
-        @media (max-width: 650px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .feature-item {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px;
-        }
-
-        .feature-item strong {
-            display: block;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        .feature-item p {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
+        /* Footer */
         footer {
-            max-width: 960px;
-            margin: 32px auto 0;
+            max-width: 860px;
+            margin: 30px auto 0;
             padding: 0 20px;
             text-align: center;
+            font-size: 12px;
             color: var(--text-light);
-            font-size: 13px;
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
-    <header class="topbar">
-        <div class="topbar-content">
-            <a href="#" class="brand-title">
-                <span>📚</span>
-                <span>Pencari Author SINTA & Scopus</span>
-            </a>
-            <div class="topbar-actions">
-                <a href="dashboard.html" class="btn btn-secondary">
-                    Buka Dashboard
-                </a>
-                <a href="pencari-author-extension.zip" download class="btn btn-primary">
-                    📥 Download .zip
-                </a>
+    <!-- Header Navigation -->
+    <header class="header-bar">
+        <div class="header-inner">
+            <a href="#" class="header-title">Pencari Author SINTA & Scopus</a>
+            <div class="header-nav">
+                <a href="dashboard.html">Dashboard Aplikasi</a>
+                <a href="https://github.com/atiohaidar/Pencari-Author" target="_blank" rel="noopener">Repositori GitHub</a>
             </div>
         </div>
     </header>
 
-    <main class="container">
+    <main class="content-container">
 
-        <!-- Hero & Download Card -->
-        <section class="hero-box">
-            <div class="tag-badge">
-                <span>⚡</span> Ekstensi Chrome Manifest V3 &bull; Bebas Instalasi (Zero-Install)
-            </div>
-            <h1>Pencari & Pencocok Author SINTA & Scopus</h1>
-            <p class="lead">
-                Alat bantu praktis untuk mencari banyak author di <strong>SINTA Kemdiktisaintek</strong> dan <strong>SCOPUS Elsevier</strong> sekaligus. Otomatis membersihkan gelar, membagi nama, memfilter kampus, dan menyalin hasil langsung ke Excel atau Google Sheets.
+        <!-- Intro and Download Section -->
+        <section class="doc-intro">
+            <h1>Panduan Pemasangan dan Penggunaan Ekstensi</h1>
+            <p class="description">
+                Ekstensi Google Chrome untuk mencari profil author pada pangkalan data SINTA Kemdiktisaintek dan Scopus Elsevier. Ekstensi ini berjalan langsung di dalam peramban web tanpa memerlukan instalasi perangkat lunak tambahan seperti Python atau Node.js.
             </p>
 
-            <div class="hero-actions">
-                <a href="pencari-author-extension.zip" download class="btn btn-primary btn-large">
-                    📥 Download Ekstensi (.zip)
+            <div class="action-row">
+                <a href="https://github.com/atiohaidar/Pencari-Author/archive/refs/heads/main.zip" class="btn btn-primary">
+                    Unduh ZIP dari GitHub
                 </a>
-                <a href="dashboard.html" class="btn btn-secondary btn-large">
-                    ▶ Lihat Dashboard App
+                <a href="dashboard.html" class="btn btn-secondary">
+                    Buka Dashboard Ekstensi
+                </a>
+                <a href="https://github.com/atiohaidar/Pencari-Author" target="_blank" rel="noopener" class="btn btn-secondary">
+                    Lihat di GitHub
                 </a>
             </div>
 
-            <div class="zero-install-note">
-                <span>✓</span> Berjalan langsung di Google Chrome / Microsoft Edge &bull; Tidak perlu Python, Node.js, atau terminal di MacBook maupun Windows.
+            <div class="env-note">
+                Kompatibel dengan Google Chrome dan Microsoft Edge di macOS dan Windows.
             </div>
 
-            <!-- In-page Navigation -->
-            <nav class="nav-links">
-                <a href="#instalasi">1. Cara Pasang di Browser</a>
+            <nav class="table-of-contents">
+                <a href="#instalasi">1. Pemasangan Ekstensi</a>
                 <a href="#sinta">2. Pencarian SINTA</a>
                 <a href="#scopus">3. Pencarian Scopus</a>
-                <a href="#ekspor">4. Salin ke Excel / CSV</a>
-                <a href="#faq">5. Masalah Umum (FAQ)</a>
+                <a href="#ekspor">4. Salin ke Spreadsheet</a>
+                <a href="#faq">5. Catatan Teknis (FAQ)</a>
             </nav>
         </section>
 
-        <!-- Section 1: Cara Pasang -->
-        <section id="instalasi" class="section-card">
-            <h2>1. Cara Memasang Ekstensi (Hanya 1 Menit)</h2>
-            <p style="color: var(--text-muted); margin-bottom: 12px;">
-                Cukup lakukan langkah berikut satu kali saja di laptop Anda atau rekan kerja:
+        <!-- Section 1: Pemasangan -->
+        <section id="instalasi" class="doc-section">
+            <h2>1. Pemasangan di Google Chrome (Hanya Dilakukan Sekali)</h2>
+            <p>
+                Unduh file ZIP dari tombol di atas, kemudian ikuti langkah berikut sesuai sistem operasi laptop yang digunakan:
             </p>
 
-            <div class="platform-grid">
-                <!-- MacBook (macOS) -->
-                <div class="platform-col">
-                    <div class="platform-header">
-                        <span>🍎</span> Untuk Pengguna MacBook (macOS)
-                    </div>
-                    <ol class="steps">
-                        <li>Klik tombol <strong>Download Ekstensi (.zip)</strong> di atas.</li>
-                        <li>Buka file <code>.zip</code> di Finder untuk mengekstraknya menjadi folder biasa.</li>
-                        <li>Buka browser <strong>Google Chrome</strong>.</li>
-                        <li>Ketik di kolom alamat: <br><code>chrome://extensions</code> lalu tekan <strong>Enter</strong>.</li>
-                        <li>Di pojok kanan atas, aktifkan toggle <strong>Developer mode</strong> (Mode pengembang).</li>
-                        <li>Di pojok kiri atas, klik tombol <strong>Load unpacked</strong> (Muat yang belum dibongkar).</li>
-                        <li>Pilih folder hasil ekstrak tadi. <strong>Selesai!</strong></li>
+            <div class="os-columns">
+                <!-- macOS -->
+                <div class="os-box">
+                    <div class="os-box-title">Untuk macOS (MacBook)</div>
+                    <ol>
+                        <li>Unduh file ZIP dari GitHub melalui tombol di atas.</li>
+                        <li>Buka file <code>Pencari-Author-main.zip</code> di Finder untuk mengekstraknya menjadi folder biasa.</li>
+                        <li>Buka Google Chrome.</li>
+                        <li>Ketik <code>chrome://extensions</code> pada bilah alamat lalu tekan Enter.</li>
+                        <li>Aktifkan sakelar <strong>Developer mode</strong> di sudut kanan atas.</li>
+                        <li>Klik tombol <strong>Load unpacked</strong> di sudut kiri atas.</li>
+                        <li>Pilih folder hasil ekstrak (folder <code>Pencari-Author-main</code>).</li>
                     </ol>
                 </div>
 
                 <!-- Windows -->
-                <div class="platform-col">
-                    <div class="platform-header">
-                        <span>🪟</span> Untuk Pengguna Windows
-                    </div>
-                    <ol class="steps">
-                        <li>Klik tombol <strong>Download Ekstensi (.zip)</strong> di atas.</li>
-                        <li>Klik kanan file zip $\rightarrow$ pilih <strong>Extract All...</strong> ke folder biasa.</li>
-                        <li>Buka browser <strong>Google Chrome</strong> (atau Edge).</li>
-                        <li>Ketik di kolom alamat: <br><code>chrome://extensions</code> lalu tekan <strong>Enter</strong>.</li>
-                        <li>Di pojok kanan atas, nyalakan switch <strong>Developer mode</strong>.</li>
-                        <li>Di pojok kiri atas, klik tombol <strong>Load unpacked</strong>.</li>
-                        <li>Pilih folder hasil ekstrak tadi. <strong>Selesai!</strong></li>
+                <div class="os-box">
+                    <div class="os-box-title">Untuk Windows</div>
+                    <ol>
+                        <li>Unduh file ZIP dari GitHub melalui tombol di atas.</li>
+                        <li>Klik kanan file ZIP, pilih <strong>Extract All...</strong>, lalu tentukan folder tujuan.</li>
+                        <li>Buka Google Chrome (atau Microsoft Edge).</li>
+                        <li>Ketik <code>chrome://extensions</code> pada bilah alamat lalu tekan Enter.</li>
+                        <li>Aktifkan sakelar <strong>Developer mode</strong> di sudut kanan atas.</li>
+                        <li>Klik tombol <strong>Load unpacked</strong> di sudut kiri atas.</li>
+                        <li>Pilih folder hasil ekstrak (folder <code>Pencari-Author-main</code>).</li>
                     </ol>
                 </div>
             </div>
 
-            <div class="callout callout-info">
-                <strong>📌 Tips Pin Icon di Toolbar Chrome:</strong><br>
-                Klik icon <strong>Puzzle</strong> di pojok kanan atas Google Chrome, lalu klik icon <strong>Pin</strong> di sebelah nama <em>"Pencari Author SINTA & Scopus"</em> agar icon selalu siap diklik di samping kolom alamat browser.
-            </div>
+            <p style="margin-top: 14px;">
+                Setelah terpasang, klik ikon ekstensi (berbentuk puzzle) di bilah kanan atas Google Chrome, lalu sematkan (pin) agar tombol aplikasi selalu terlihat.
+            </p>
         </section>
 
         <!-- Section 2: Pencarian SINTA -->
-        <section id="sinta" class="section-card">
+        <section id="sinta" class="doc-section">
             <h2>2. Cara Menggunakan Pencarian SINTA</h2>
-            <p style="color: var(--text-muted); margin-bottom: 14px;">
-                Mencari data author di portal resmi SINTA Kemdiktisaintek lengkap dengan skor 3 tahun, skor total, H-index Scopus, Scholar, dan WOS.
+            <p>
+                Tab SINTA digunakan untuk mencari profil author pada portal resmi SINTA Kemdiktisaintek, termasuk skor 3 tahun, skor total, H-index Scopus, Google Scholar, dan WOS.
             </p>
 
-            <ol class="steps">
-                <li>Klik icon ekstensi di toolbar Chrome untuk membuka halaman <strong>Dashboard</strong>.</li>
-                <li>Pilih tab <strong>[ 🏛️ SINTA ]</strong>.</li>
+            <ol>
+                <li>Buka dashboard ekstensi dengan mengklik ikon pada toolbar browser.</li>
+                <li>Pilih tab <strong>SINTA</strong>.</li>
                 <li>
-                    Masukkan daftar nama di kolom teks (satu baris untuk setiap nama).
-                    <pre style="background: #f1f5f9; padding: 8px 12px; border-radius: 6px; margin: 8px 0; font-size: 13px; font-family: monospace;">Dr. Tio Haidar Hanif, M.Kom.
+                    Ketik atau tempel daftar nama pada kolom input teks (satu nama per baris), contoh:
+                    <pre>Dr. Tio Haidar Hanif, M.Kom.
 Prof. Ir. Budi Santoso, M.Sc., Ph.D.
 Siti Aminah, S.Pd., M.Pd.</pre>
                 </li>
                 <li>
-                    <strong>Opsi Pengaturan:</strong>
-                    <ul class="details" style="margin-top: 6px;">
-                        <li><strong>Bersihkan Gelar Otomatis:</strong> Gelar seperti <em>Prof, Dr, M.Kom, S.T.</em> otomatis dibersihkan saat pencarian agar nama cocok di SINTA, namun nama asli tetap tercatat pada tabel hasil.</li>
-                        <li><strong>Filter Kampus:</strong> Masukkan nama universitas jika ingin menyaring author dari institusi tertentu saja (contoh: <code>Universitas Indonesia</code>). Dikosongkan jika ingin mencari ke semua kampus.</li>
-                        <li><strong>Hapus Duplikat:</strong> Menghilangkan nama ganda sebelum pencarian dimulai.</li>
+                    Tentukan opsi pencarian:
+                    <ul>
+                        <li><strong>Bersihkan Gelar:</strong> Disarankan selalu aktif agar gelar akademik diabaikan saat pencarian sehingga hasil lebih akurat, sementara nama asli tetap tersimpan di tabel hasil.</li>
+                        <li><strong>Filter Kampus:</strong> Masukkan nama perguruan tinggi jika ingin menyaring author hanya dari kampus tertentu. Kosongkan jika ingin mencari di seluruh kampus.</li>
+                        <li><strong>Hapus Duplikat:</strong> Menghilangkan entri nama ganda sebelum pencarian diproses.</li>
+                        <li><strong>Jeda Antar Permintaan:</strong> Jeda waktu default 1 detik per nama untuk menjaga kestabilan permintaan ke server SINTA.</li>
                     </ul>
                 </li>
-                <li>Klik tombol <strong>"▶ Mulai Pencarian SINTA"</strong>.</li>
+                <li>Klik tombol <strong>Mulai Pencarian SINTA</strong>.</li>
             </ol>
 
-            <div class="callout callout-warning">
-                <strong>⚠️ Jika Muncul Status "Perlu Konfirmasi" (Kuning):</strong><br>
-                Artinya SINTA menemukan lebih dari satu kandidat dengan nama mirip. Klik tombol kuning <strong>"Pilih Kandidat"</strong> pada baris nama tersebut, lalu tentukan profil author yang sesuai. Jika bukan salah satunya, klik <em>"Tidak Ada yang Benar"</em>.
+            <div class="note-box">
+                <strong>Status Perlu Konfirmasi:</strong> Jika ditemukan beberapa kandidat author dengan nama yang serupa, status baris akan berwarna kuning (<em>Perlu Konfirmasi</em>). Klik tombol <em>Pilih Kandidat</em> pada baris tersebut untuk memilih profil yang benar, atau klik <em>Tidak Ada yang Benar</em> jika bukan profil yang dicari.
             </div>
         </section>
 
         <!-- Section 3: Pencarian Scopus -->
-        <section id="scopus" class="section-card">
-            <h2>3. Cara Menggunakan Pencarian SCOPUS</h2>
-            <p style="color: var(--text-muted); margin-bottom: 14px;">
-                Mencari profil author di Scopus Elsevier untuk mendapatkan Scopus Author ID, afiliasi instansi, kota, negara, jumlah dokumen, dan h-index Scopus.
+        <section id="scopus" class="doc-section">
+            <h2>3. Cara Menggunakan Pencarian Scopus</h2>
+            <p>
+                Tab Scopus digunakan untuk mencari data profil author di Scopus Elsevier, termasuk Scopus Author ID, afiliasi, kota, negara, jumlah dokumen terindeks, dan h-index Scopus.
             </p>
 
-            <ol class="steps">
-                <li>Buka dashboard ekstensi, lalu pilih tab <strong>[ 🔬 SCOPUS ]</strong>.</li>
-                <li>Masukkan daftar nama pada kolom teks.</li>
+            <ol>
+                <li>Pilih tab <strong>Scopus</strong> pada dashboard ekstensi.</li>
+                <li>Masukkan daftar nama pada kolom input teks.</li>
                 <li>
-                    <strong>Pemisahan Nama Otomatis:</strong><br>
-                    Sistem otomatis memecah nama menjadi <em>First Name</em> dan <em>Last Name</em> sesuai format baku pencarian Scopus internasional.<br>
-                    Contoh: <code>Dr. Tio Haidar Hanif, M.Kom.</code> $\rightarrow$ Last: <code>Hanif</code>, First: <code>Tio Haidar</code>.
+                    Sistem akan otomatis memisahkan nama menjadi Nama Depan (<em>First Name</em>) dan Nama Belakang (<em>Last Name</em>) sesuai struktur pencarian baku Scopus.
                 </li>
-                <li>Klik tombol <strong>"▶ Mulai Pencarian Scopus"</strong>.</li>
+                <li>Klik tombol <strong>Mulai Pencarian Scopus</strong>.</li>
                 <li>
-                    <strong>Cara Kerja di Latar Belakang:</strong><br>
-                    Ekstensi akan membuka satu tab Scopus di browser secara otomatis untuk mengekstrak data yang dibutuhkan, dan menutupnya kembali setelah pencarian selesai. Anda tidak perlu mengutak-atik tab tersebut.
+                    Ekstensi akan membuka satu tab Scopus di latar belakang untuk membaca data hasil pencarian secara otomatis, dan menutup tab tersebut setelah seluruh antrian selesai.
                 </li>
             </ol>
 
-            <div class="callout callout-info">
-                <strong>💡 Catatan Akses Jaringan:</strong><br>
-                Pencarian nama author Scopus dapat diakses secara publik. Namun jika Anda terhubung ke jaringan/WiFi/VPN kampus yang memiliki lisensi langganan Scopus, rincian afiliasi biasanya akan tampil lebih detail.
+            <div class="note-box">
+                <strong>Catatan Jaringan:</strong> Pencarian author Scopus dapat diakses dari jaringan publik. Jika perangkat Anda terhubung ke jaringan atau VPN kampus yang berlangganan Scopus, rincian profil biasanya akan disajikan lebih lengkap oleh Elsevier.
             </div>
         </section>
 
-        <!-- Section 4: Salin ke Excel / CSV -->
-        <section id="ekspor" class="section-card">
-            <h2>4. Cara Memindahkan Hasil ke Excel / Google Sheets</h2>
-            <p style="color: var(--text-muted); margin-bottom: 14px;">
-                Tersedia dua opsi praktis setelah pencarian selesai:
+        <!-- Section 4: Salin ke Spreadsheet -->
+        <section id="ekspor" class="doc-section">
+            <h2>4. Menyalin Hasil ke Excel atau Google Sheets</h2>
+            <p>
+                Setelah pencarian selesai, data tabel dapat dipindahkan menggunakan salah satu dari dua metode:
             </p>
 
-            <div class="platform-grid">
-                <div class="platform-col">
-                    <div class="platform-header">
-                        <span>📋</span> Opsi 1: Salin Tabel (Langsung Paste)
-                    </div>
-                    <ol class="steps">
-                        <li>Klik tombol <strong>"📋 Salin Tabel"</strong> di pojok kanan atas tabel hasil.</li>
-                        <li>Buka <strong>Microsoft Excel</strong> atau <strong>Google Sheets</strong> baru.</li>
-                        <li>Klik pada sel <strong>A1</strong>, lalu tekan:
-                            <div style="margin: 8px 0;">
-                                <kbd>Ctrl</kbd> + <kbd>V</kbd> (Windows) atau <kbd>Cmd ⌘</kbd> + <kbd>V</kbd> (Mac)
-                            </div>
-                        </li>
-                        <li>Seluruh kolom dan baris akan langsung rapi di sel masing-masing.</li>
-                    </ol>
-                </div>
-
-                <div class="platform-col">
-                    <div class="platform-header">
-                        <span>📥</span> Opsi 2: Unduh File CSV
-                    </div>
-                    <ol class="steps">
-                        <li>Klik tombol <strong>"📥 Unduh CSV"</strong>.</li>
-                        <li>File bernama <code>hasil_author_sinta_....csv</code> atau <code>hasil_author_scopus_....csv</code> akan otomatis terunduh.</li>
-                        <li>File sudah berformat standar UTF-8 BOM, sehingga teks nama tidak akan rusak saat dibuka di Excel.</li>
-                    </ol>
-                </div>
-            </div>
+            <ul>
+                <li>
+                    <strong>Salin Tabel:</strong> Klik tombol <em>Salin Tabel</em> di atas tabel hasil. Buka Microsoft Excel atau Google Sheets, pilih sel A1, lalu tekan <kbd>Ctrl</kbd> + <kbd>V</kbd> (di Windows) atau <kbd>Cmd</kbd> + <kbd>V</kbd> (di macOS). Semua data akan tertata rapi pada kolom masing-masing.
+                </li>
+                <li>
+                    <strong>Unduh CSV:</strong> Klik tombol <em>Unduh CSV</em> untuk mengunduh file spreadsheet berformat standar UTF-8 BOM yang dapat langsung dibuka di Microsoft Excel tanpa masalah karakter encoding.
+                </li>
+            </ul>
         </section>
 
-        <!-- Section 5: FAQ & Troubleshooting -->
-        <section id="faq" class="section-card">
-            <h2>5. Pertanyaan & Kendala yang Sering Terjadi (FAQ)</h2>
+        <!-- Section 5: Catatan Teknis & FAQ -->
+        <section id="faq" class="doc-section">
+            <h2>5. Catatan Teknis dan Kendala Umum</h2>
 
-            <h3>Q: Apakah rekan saya harus menginstal Python / library apapun?</h3>
-            <p style="color: var(--text-muted);">
-                <strong>Tidak sama sekali.</strong> Ekstensi ini 100% menggunakan kapabilitas browser Chrome asli. Rekan Anda cukup mendownload zip, mengekstraknya, dan memuatnya di <code>chrome://extensions</code>.
+            <h3>Apakah rekan kerja saya harus menginstal perangkat lunak lain?</h3>
+            <p>
+                Tidak. Seluruh fungsionalitas berjalan murni sebagai ekstensi di dalam peramban Google Chrome atau Microsoft Edge. Tidak diperlukan instalasi Python, pip, Node.js, atau penggunaan terminal.
             </p>
 
-            <h3>Q: Mengapa hasil pencarian statusnya "Tidak Ditemukan"?</h3>
-            <p style="color: var(--text-muted);">
-                Kemungkinan penyebabnya:
+            <h3>Mengapa status author "Tidak Ditemukan"?</h3>
+            <p>
+                Beberapa hal yang dapat diperiksa:
             </p>
-            <ul class="details" style="color: var(--text-muted);">
-                <li>Ejaan nama berbeda dengan yang tercantum di pangkalan data SINTA/Scopus (misal ada singkatan nama).</li>
-                <li>Filter kampus terlalu ketat atau berbeda ejaan. Coba kosongkan kolom filter kampus.</li>
-                <li>Nama tersebut memang belum terdaftar di database SINTA maupun Scopus.</li>
+            <ul>
+                <li>Perbedaan ejaan antara nama yang dimasukkan dengan yang terdaftar di basis data (misalnya singkatan nama).</li>
+                <li>Filter nama kampus terlalu spesifik atau penulisan nama kampusnya berbeda. Coba kosongkan kolom filter kampus.</li>
+                <li>Author yang bersangkutan memang belum terdaftar di pangkalan data SINTA atau Scopus.</li>
             </ul>
 
-            <h3>Q: Mengapa ada jeda 1 detik di antara setiap nama?</h3>
-            <p style="color: var(--text-muted);">
-                Jeda (delay) ini sengaja dibuat agar server SINTA dan Scopus tidak memblokir IP laptop Anda karena dianggap sebagai bot atau serangan spam. Anda bisa mengatur durasi jeda di pengaturan (800 ms – 2000 ms).
-            </p>
-
-            <h3>Q: Apakah data nama yang saya cari aman?</h3>
-            <p style="color: var(--text-muted);">
-                <strong>Sangat aman.</strong> Seluruh proses pencarian berjalan 100% lokal di browser Anda (*client-side*). Data tidak pernah dikirim ke server pembuat atau pihak ketiga mana pun.
+            <h3>Bagaimana privasi dan keamanan data?</h3>
+            <p>
+                Seluruh proses pencarian berlangsung secara lokal di peramban komputer pengguna. Data nama tidak pernah dikirim ke server pengembang atau pihak ketiga mana pun selain langsung ke web resmi SINTA dan Scopus.
             </p>
         </section>
-
-        <!-- Download Banner Bottom -->
-        <div style="text-align: center; margin: 36px 0 20px;">
-            <a href="pencari-author-extension.zip" download class="btn btn-primary btn-large" style="padding: 14px 28px; font-size: 16px;">
-                📥 Download Ekstensi (.zip)
-            </a>
-            <div style="margin-top: 10px;">
-                <a href="dashboard.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: 500;">
-                    Atau coba lihat Dashboard Aplikasi ➔
-                </a>
-            </div>
-        </div>
 
     </main>
 
     <footer>
-        <p>Ekstensi Pencari Author SINTA & Scopus &bull; Bebas instalasi, ringan, dan berjalan langsung di Google Chrome.</p>
+        <p>Ekstensi Pencari Author SINTA & Scopus &bull; <a href="https://github.com/atiohaidar/Pencari-Author" target="_blank" rel="noopener">github.com/atiohaidar/Pencari-Author</a></p>
     </footer>
 
 </body>
