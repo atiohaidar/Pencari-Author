@@ -29,6 +29,21 @@
 
     <main class="container">
 
+        <!-- Non-Extension Mode Notice Banner (Hidden when running as Chrome Extension) -->
+        <div id="standaloneNotice" class="alert-banner hidden">
+            <div class="alert-icon">💡</div>
+            <div class="alert-body">
+                <strong>Cara Menggunakan di MacBook / Windows (Tanpa Perlu Instal Apapun):</strong>
+                <p style="margin: 4px 0 6px 0;">Halaman ini saat ini dibuka langsung sebagai file biasa (<code>file://</code>). Agar dapat mencari author SINTA & Scopus secara otomatis tanpa dicegat izin browser:</p>
+                <ol style="margin: 0 0 0 20px; line-height: 1.6;">
+                    <li>Buka browser <strong>Google Chrome</strong> lalu buka tab: <code>chrome://extensions</code></li>
+                    <li>Aktifkan sakelar <strong>Developer mode</strong> (Mode pengembang) di pojok kanan atas.</li>
+                    <li>Klik tombol <strong>Load unpacked</strong> (Muat yang belum dibongkar) lalu pilih folder ini.</li>
+                    <li>Klik icon ekstensi di toolbar Google Chrome untuk mulai menggunakan!</li>
+                </ol>
+            </div>
+        </div>
+
         <!-- Source Selector Tabs -->
         <div class="source-tabs">
             <button type="button" id="tabSinta" class="source-tab active">

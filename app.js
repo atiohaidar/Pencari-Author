@@ -229,19 +229,14 @@ function parseSintaHTML(htmlString, queryCleaned, campusFilter = '') {
 // 4. Data Fetchers (SINTA & SCOPUS)
 // ============================================================================
 async function fetchSintaSearch(query) {
-    if (state.isExtensionMode) {
-        // Direct fetch in Chrome Extension (allowed by host_permissions)
-        const targetUrl = `https://sinta.kemdiktisaintek.go.id/authors/?q=${encodeURIComponent(query)}`;
-        const response = await fetch(targetUrl);
-        if (!response.ok) throw new Error(`SINTA returned HTTP ${response.status}`);
-        return await response.text();
-    } else {
-        // Local proxy server fallback
-        const url = `/api/search?q=${encodeURIComponent(query)}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Server returned HTTP ${response.status}`);
-        return await response.text();
+    if (!state.isExtensionMode) {
+        throw new Error('Pencarian SINTA membutuhkan Mode Ekstensi Chrome. Silakan muat ekstensi ini di chrome://extensions lalu buka lewat icon ekstensi.');
     }
+    // Direct fetch in Chrome Extension (allowed by host_permissions, no server needed)
+    const targetUrl = `https://sinta.kemdiktisaintek.go.id/authors/?q=${encodeURIComponent(query)}`;
+    const response = await fetch(targetUrl);
+    if (!response.ok) throw new Error(`SINTA returned HTTP ${response.status}`);
+    return await response.text();
 }
 
 async function fetchScopusSearch(item) {
@@ -1164,24 +1159,20 @@ function handleFileUpload(event) {
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
     const badge = document.getElementById('serverStatusBadge');
+    const notice = document.getElementById('standaloneNotice');
 
     if (state.isExtensionMode) {
-        badge.innerHTML = '<span class="dot"></span> Mode Ekstensi Chrome Aktif';
-        badge.className = 'badge-server badge-success';
+        if (badge) {
+            badge.innerHTML = '<span class="dot"></span> Mode Ekstensi Chrome Siap (Zero-Install)';
+            badge.className = 'badge-server badge-success';
+        }
+        if (notice) notice.classList.add('hidden');
     } else {
-        // Check local server proxy
-        fetch('/api/health')
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'ok') {
-                    badge.innerHTML = '<span class="dot"></span> Server Lokal Terhubung (Web)';
-                    badge.className = 'badge-server badge-success';
-                }
-            })
-            .catch(() => {
-                badge.innerHTML = '<span class="dot"></span> Mode Standalone (Pasang Ekstensi Chrome)';
-                badge.className = 'badge-server badge-warning';
-            });
+        if (badge) {
+            badge.innerHTML = '<span class="dot"></span> Bukan Mode Ekstensi (Buka via chrome://extensions)';
+            badge.className = 'badge-server badge-warning';
+        }
+        if (notice) notice.classList.remove('hidden');
     }
 
     // Attach Event Listeners (Compliant with Chrome Extension CSP)
