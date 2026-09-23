@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Pencari Author SINTA & Scopus",
-  "version": "1.0.0",
-  "description": "Ekstensi Chrome untuk mencari, mencocokkan kemiripan, dan mengumpulkan data author SINTA & Scopus secara otomatis.",
+  "name": "Pencari Author SINTA, GARUDA & Scopus",
+  "version": "1.1.0",
+  "description": "Ekstensi Chrome untuk mencari, mencocokkan kemiripan, dan mengumpulkan data author SINTA, GARUDA & Scopus secara otomatis.",
   "permissions": [
     "storage",
     "tabs",

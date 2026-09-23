@@ -6,6 +6,7 @@
 // Global State
 const state = {
     currentSource: 'all',   // 'all' | 'sinta' | 'garuda' | 'scopus'
+    inputMode: 'name',      // 'name' | 'scopus_id'
     isExtensionMode: typeof chrome !== 'undefined' && !!chrome.runtime?.id,
     items: [],              // List of items to search
     currentIndex: 0,        // Current processing index
@@ -419,6 +420,33 @@ async function fetchScopusSearch(item) {
     });
 }
 
+async function fetchScopusProfile(scopusId) {
+    if (!state.isExtensionMode) {
+        throw new Error('Pencarian Scopus membutuhkan mode Ekstensi Chrome. Silakan muat ekstensi ini di chrome://extensions.');
+    }
+
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({
+            action: 'FETCH_SCOPUS_PROFILE',
+            scopusId
+        }, (response) => {
+            if (chrome.runtime.lastError) {
+                return reject(new Error(chrome.runtime.lastError.message));
+            }
+            if (!response || !response.success) {
+                return reject(new Error(response?.error || 'Gagal mengambil data profil Scopus'));
+            }
+            resolve(response.profile || response.data || null);
+        });
+    });
+}
+
+function extractScopusId(inputLine) {
+    if (!inputLine) return '';
+    const match = inputLine.match(/authorId=(\d+)/i) || inputLine.match(/(\d{8,12})/);
+    return match ? match[1] : inputLine.replace(/\D/g, '');
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -451,6 +479,21 @@ function switchSource(source) {
     state.items = [];
     state.currentIndex = 0;
 
+    // If source is sinta or garuda and currently in scopus_id mode, revert to name mode
+    if ((source === 'sinta' || source === 'garuda') && state.inputMode === 'scopus_id') {
+        state.inputMode = 'name';
+        document.getElementById('inputModeName')?.classList.add('active');
+        document.getElementById('inputModeScopusId')?.classList.remove('active');
+        const namesLabel = document.getElementById('namesInputLabel');
+        if (namesLabel) namesLabel.textContent = 'Daftar Nama yang Dicari (1 nama per baris):';
+        const namesInput = document.getElementById('namesInput');
+        if (namesInput) {
+            namesInput.placeholder = 'Contoh:\nDr. Budi Santoso, M.Kom.\nProf. Ir. Siti Aminah, Ph.D.\nHaidar Fari Aditya';
+        }
+        const btnSampleNames = document.getElementById('btnSampleNames');
+        if (btnSampleNames) btnSampleNames.textContent = 'Gunakan Contoh Nama';
+    }
+
     // Update UI tabs
     const tabAll = document.getElementById('tabAll');
     const tabSinta = document.getElementById('tabSinta');
@@ -467,8 +510,16 @@ function switchSource(source) {
 
     if (source === 'all') {
         tabAll?.classList.add('active');
-        if (secTitle) secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian Gabungan SINTA + GARUDA + SCOPUS)';
-        if (btnStartText) btnStartText.textContent = 'Mulai Pencarian Semua Sumber';
+        if (secTitle) {
+            secTitle.textContent = state.inputMode === 'scopus_id'
+                ? '1. Masukkan Scopus Author ID (Reverse Lookup ➔ SINTA & GARUDA)'
+                : '1. Masukkan Daftar Nama (Pencarian Gabungan SINTA + GARUDA + SCOPUS)';
+        }
+        if (btnStartText) {
+            btnStartText.textContent = state.inputMode === 'scopus_id'
+                ? 'Mulai Reverse Lookup (Scopus ➔ SINTA & GARUDA)'
+                : 'Mulai Pencarian Semua Sumber';
+        }
         if (delaySelect) delaySelect.value = '1500';
     } else if (source === 'sinta') {
         tabSinta?.classList.add('active');
@@ -482,9 +533,97 @@ function switchSource(source) {
         if (delaySelect) delaySelect.value = '1000';
     } else {
         tabScopus?.classList.add('active');
-        if (secTitle) secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian SCOPUS)';
-        if (btnStartText) btnStartText.textContent = 'Mulai Pencarian Scopus';
+        if (secTitle) {
+            secTitle.textContent = state.inputMode === 'scopus_id'
+                ? '1. Masukkan Scopus Author ID (Profil Scopus)'
+                : '1. Masukkan Daftar Nama (Pencarian SCOPUS)';
+        }
+        if (btnStartText) {
+            btnStartText.textContent = state.inputMode === 'scopus_id'
+                ? 'Ambil Detail Profil Scopus'
+                : 'Mulai Pencarian Scopus';
+        }
         if (delaySelect) delaySelect.value = '1500';
+    }
+
+    renderTableHeader();
+    updateUIControls();
+    renderStats();
+    renderTable();
+    document.getElementById('reviewBanner')?.classList.add('hidden');
+}
+
+function switchInputMode(mode) {
+    if (state.isRunning) {
+        if (!confirm('Pencarian sedang berjalan. Ganti mode input akan mereset proses saat ini. Lanjutkan?')) {
+            return;
+        }
+        state.isRunning = false;
+        state.isPaused = false;
+    }
+
+    state.inputMode = mode;
+    state.items = [];
+    state.currentIndex = 0;
+
+    const btnModeName = document.getElementById('inputModeName');
+    const btnModeScopus = document.getElementById('inputModeScopusId');
+    const namesLabel = document.getElementById('namesInputLabel');
+    const namesInput = document.getElementById('namesInput');
+    const btnSampleNames = document.getElementById('btnSampleNames');
+    const btnStartText = document.getElementById('btnStartText');
+    const secTitle = document.getElementById('section1Title');
+
+    btnModeName?.classList.remove('active');
+    btnModeScopus?.classList.remove('active');
+
+    if (mode === 'scopus_id') {
+        btnModeScopus?.classList.add('active');
+
+        // If currently on sinta or garuda tab, auto-switch to all
+        if (state.currentSource === 'sinta' || state.currentSource === 'garuda') {
+            state.currentSource = 'all';
+            document.getElementById('tabAll')?.classList.add('active');
+            document.getElementById('tabSinta')?.classList.remove('active');
+            document.getElementById('tabGaruda')?.classList.remove('active');
+            document.getElementById('tabScopus')?.classList.remove('active');
+        }
+
+        if (secTitle) {
+            secTitle.textContent = state.currentSource === 'all'
+                ? '1. Masukkan Scopus Author ID (Reverse Lookup ➔ SINTA & GARUDA)'
+                : '1. Masukkan Scopus Author ID (Profil Scopus)';
+        }
+
+        if (namesLabel) namesLabel.textContent = 'Daftar Scopus Author ID / URL Profil (1 per baris):';
+        if (namesInput) {
+            namesInput.placeholder = 'Contoh:\n60611357400\n57193231456\nhttps://www.scopus.com/authid/detail.uri?authorId=60611357400';
+        }
+        if (btnSampleNames) btnSampleNames.textContent = 'Gunakan Contoh Scopus ID';
+        if (btnStartText) {
+            btnStartText.textContent = state.currentSource === 'all'
+                ? 'Mulai Reverse Lookup (Scopus ➔ SINTA & GARUDA)'
+                : 'Ambil Detail Profil Scopus';
+        }
+    } else {
+        btnModeName?.classList.add('active');
+        if (secTitle) {
+            if (state.currentSource === 'all') secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian Gabungan SINTA + GARUDA + SCOPUS)';
+            else if (state.currentSource === 'sinta') secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian SINTA)';
+            else if (state.currentSource === 'garuda') secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian GARUDA)';
+            else secTitle.textContent = '1. Masukkan Daftar Nama (Pencarian SCOPUS)';
+        }
+        if (namesLabel) namesLabel.textContent = 'Daftar Nama yang Dicari (1 nama per baris):';
+        if (namesInput) {
+            namesInput.placeholder = 'Contoh:\nDr. Budi Santoso, M.Kom.\nProf. Ir. Siti Aminah, Ph.D.\nHaidar Fari Aditya';
+        }
+        if (btnSampleNames) btnSampleNames.textContent = 'Gunakan Contoh Nama';
+        if (btnStartText) {
+            if (state.currentSource === 'all') btnStartText.textContent = 'Mulai Pencarian Semua Sumber';
+            else if (state.currentSource === 'sinta') btnStartText.textContent = 'Mulai Pencarian SINTA';
+            else if (state.currentSource === 'garuda') btnStartText.textContent = 'Mulai Pencarian Garuda';
+            else btnStartText.textContent = 'Mulai Pencarian Scopus';
+        }
     }
 
     renderTableHeader();
@@ -520,61 +659,114 @@ async function startProcess() {
     state.removeDuplicates = document.getElementById('removeDuplicatesCheck')?.checked ?? true;
     state.campusFilter = document.getElementById('campusFilter').value.trim();
 
-    // Deduplication
+    // Deduplication & Item Construction
     let processedLines = lines;
     state.duplicateCount = 0;
-    if (state.removeDuplicates) {
-        const seen = new Set();
-        processedLines = [];
-        for (const name of lines) {
-            const key = state.stripTitles 
-                ? cleanAcademicTitles(name).toLowerCase() 
-                : name.trim().toLowerCase();
-            
-            if (!seen.has(key)) {
-                seen.add(key);
-                processedLines.push(name);
-            } else {
-                state.duplicateCount++;
+
+    if (state.inputMode === 'scopus_id') {
+        if (state.removeDuplicates) {
+            const seen = new Set();
+            processedLines = [];
+            for (const line of lines) {
+                const scopusId = extractScopusId(line);
+                if (!scopusId) continue;
+                if (!seen.has(scopusId)) {
+                    seen.add(scopusId);
+                    processedLines.push(line);
+                } else {
+                    state.duplicateCount++;
+                }
             }
         }
-    }
 
-    // Build Item List
-    state.items = processedLines.map((originalName, idx) => {
-        const cleanedName = state.stripTitles ? cleanAcademicTitles(originalName) : originalName;
-        const { firstName, lastName } = splitFirstLastName(cleanedName);
-
-        return {
-            id: idx + 1,
-            originalName,
-            cleanedName,
-            scopusFirstName: firstName,
-            scopusLastName: lastName,
-            status: 'pending',
-            candidates: [],
-            selectedCandidate: null,
-            error: null,
-            sinta: {
+        state.items = processedLines.map((originalLine, idx) => {
+            const scopusId = extractScopusId(originalLine);
+            return {
+                id: idx + 1,
+                originalInput: originalLine,
+                originalName: `Scopus ID: ${scopusId}`,
+                cleanedName: '',
+                scopusId,
+                scopusFirstName: '',
+                scopusLastName: '',
                 status: 'pending',
                 candidates: [],
                 selectedCandidate: null,
-                error: null
-            },
-            garuda: {
-                status: 'pending',
-                candidates: [],
-                selectedCandidate: null,
-                error: null
-            },
-            scopus: {
-                status: 'pending',
-                candidates: [],
-                selectedCandidate: null,
-                error: null
+                error: null,
+                sinta: {
+                    status: 'pending',
+                    candidates: [],
+                    selectedCandidate: null,
+                    error: null
+                },
+                garuda: {
+                    status: 'pending',
+                    candidates: [],
+                    selectedCandidate: null,
+                    error: null
+                },
+                scopus: {
+                    status: 'pending',
+                    candidates: [],
+                    selectedCandidate: null,
+                    error: null
+                }
+            };
+        });
+    } else {
+        if (state.removeDuplicates) {
+            const seen = new Set();
+            processedLines = [];
+            for (const name of lines) {
+                const key = state.stripTitles 
+                    ? cleanAcademicTitles(name).toLowerCase() 
+                    : name.trim().toLowerCase();
+                
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    processedLines.push(name);
+                } else {
+                    state.duplicateCount++;
+                }
             }
-        };
-    });
+        }
+
+        // Build Item List
+        state.items = processedLines.map((originalName, idx) => {
+            const cleanedName = state.stripTitles ? cleanAcademicTitles(originalName) : originalName;
+            const { firstName, lastName } = splitFirstLastName(cleanedName);
+
+            return {
+                id: idx + 1,
+                originalName,
+                cleanedName,
+                scopusFirstName: firstName,
+                scopusLastName: lastName,
+                status: 'pending',
+                candidates: [],
+                selectedCandidate: null,
+                error: null,
+                sinta: {
+                    status: 'pending',
+                    candidates: [],
+                    selectedCandidate: null,
+                    error: null
+                },
+                garuda: {
+                    status: 'pending',
+                    candidates: [],
+                    selectedCandidate: null,
+                    error: null
+                },
+                scopus: {
+                    status: 'pending',
+                    candidates: [],
+                    selectedCandidate: null,
+                    error: null
+                }
+            };
+        });
+    }
 
     state.currentIndex = 0;
     state.isRunning = true;
@@ -603,7 +795,106 @@ async function runQueue() {
         renderTable();
 
         try {
-            if (state.currentSource === 'all') {
+            if (state.inputMode === 'scopus_id') {
+                // ============================================================
+                // REVERSE LOOKUP FLOW (From Scopus ID -> Profile -> SINTA & GARUDA)
+                // ============================================================
+                item.scopus.status = 'searching';
+                renderTable();
+
+                let profile = null;
+                try {
+                    profile = await fetchScopusProfile(item.scopusId);
+                } catch (errSc) {
+                    console.error(`Error fetching Scopus profile for ID ${item.scopusId}:`, errSc);
+                    item.scopus.status = 'not_found';
+                    item.scopus.error = errSc.message;
+                }
+
+                if (profile && (profile.fullName || profile.rawName)) {
+                    const scopusCand = {
+                        scopusId: profile.scopusId || item.scopusId,
+                        name: profile.name || profile.rawName,
+                        profileUrl: profile.profileUrl || `https://www.scopus.com/authid/detail.uri?authorId=${item.scopusId}`,
+                        affiliation: profile.affiliation || '',
+                        city: profile.city || '',
+                        country: profile.country || '',
+                        documents: profile.documents || '0',
+                        citations: profile.citations || '0',
+                        hIndex: profile.hIndex || '0',
+                        similarity: 100 // 100% matched by exact ID
+                    };
+                    item.scopus.candidates = [scopusCand];
+                    item.scopus.selectedCandidate = scopusCand;
+                    item.scopus.status = 'matched';
+
+                    item.candidates = [scopusCand];
+                    item.selectedCandidate = scopusCand;
+
+                    const resolvedFullName = profile.fullName || profile.rawName;
+                    item.originalName = resolvedFullName;
+                    item.cleanedName = resolvedFullName;
+                    item.scopusLastName = profile.lastName || '';
+                    item.scopusFirstName = profile.firstName || '';
+                    renderTable();
+
+                    // If in 'all' mode, search SINTA and GARUDA using the extracted author name!
+                    if (state.currentSource === 'all') {
+                        const query = item.cleanedName;
+                        const campusQuery = state.campusFilter || '';
+
+                        // 1. Fetch SINTA
+                        item.sinta.status = 'searching';
+                        renderTable();
+                        try {
+                            const htmlS = await fetchSintaSearch(query);
+                            const sCandidates = parseSintaHTML(htmlS, query, campusQuery);
+                            item.sinta.candidates = sCandidates;
+                            const evalS = evaluateCandidateMatch(sCandidates);
+                            item.sinta.status = evalS.status;
+                            item.sinta.selectedCandidate = evalS.selectedCandidate;
+                        } catch (errS) {
+                            console.error(`Error searching SINTA for ${query}:`, errS);
+                            item.sinta.status = 'not_found';
+                            item.sinta.error = errS.message;
+                        }
+
+                        // 2. Fetch GARUDA
+                        item.garuda.status = 'searching';
+                        renderTable();
+                        try {
+                            const htmlG = await fetchGarudaSearch(query, campusQuery);
+                            const gCandidates = parseGarudaHTML(htmlG, query, campusQuery);
+                            item.garuda.candidates = gCandidates;
+                            const evalG = evaluateCandidateMatch(gCandidates);
+                            item.garuda.status = evalG.status;
+                            item.garuda.selectedCandidate = evalG.selectedCandidate;
+                        } catch (errG) {
+                            console.error(`Error searching GARUDA for ${query}:`, errG);
+                            item.garuda.status = 'not_found';
+                            item.garuda.error = errG.message;
+                        }
+
+                        // Evaluate overall item status
+                        const subStatuses = [item.sinta.status, item.garuda.status, item.scopus.status];
+                        if (subStatuses.includes('need_review')) {
+                            item.status = 'need_review';
+                        } else if (subStatuses.every(s => s === 'not_found')) {
+                            item.status = 'not_found';
+                        } else {
+                            item.status = 'matched';
+                        }
+                    } else {
+                        item.status = 'matched';
+                    }
+                } else {
+                    item.scopus.status = 'not_found';
+                    item.sinta.status = 'skipped';
+                    item.garuda.status = 'skipped';
+                    item.status = 'not_found';
+                }
+
+            } else if (state.currentSource === 'all') {
                 const query = item.cleanedName || item.originalName;
 
                 // 1. Fetch SINTA
@@ -822,10 +1113,11 @@ function renderTableHeader() {
     if (!thead) return;
 
     if (state.currentSource === 'all') {
+        const colNameLabel = state.inputMode === 'scopus_id' ? 'Nama Author (Resolusi Scopus)' : 'Nama Asli (Input)';
         thead.innerHTML = `
             <tr>
                 <th style="width: 35px;">No</th>
-                <th style="min-width: 140px;">Nama Asli (Input)</th>
+                <th style="min-width: 140px;">${colNameLabel}</th>
                 <th style="min-width: 250px;">SINTA Kemdiktisaintek</th>
                 <th style="min-width: 220px;">GARUDA Kemdiktisaintek</th>
                 <th style="min-width: 250px;">SCOPUS Elsevier</th>
@@ -863,10 +1155,11 @@ function renderTableHeader() {
             </tr>
         `;
     } else {
+        const colNameLabel = state.inputMode === 'scopus_id' ? 'Nama / ID (Input)' : 'Nama Asli (Input)';
         thead.innerHTML = `
             <tr>
                 <th style="width: 40px;">No</th>
-                <th>Nama Asli (Input)</th>
+                <th>${colNameLabel}</th>
                 <th>Status</th>
                 <th>Nama di Scopus</th>
                 <th>Scopus Author ID</th>
@@ -1021,7 +1314,9 @@ function renderTable() {
     if (state.currentSource === 'all') {
         tbody.innerHTML = filtered.map(item => {
             let querySubtitle = '';
-            if (state.stripTitles && item.cleanedName !== item.originalName) {
+            if (state.inputMode === 'scopus_id' && item.scopusId) {
+                querySubtitle = `<div class="text-muted text-sm">Scopus ID: <code style="background:#f1f5f9; padding:1px 4px; border-radius:3px;">${item.scopusId}</code></div>`;
+            } else if (state.stripTitles && item.cleanedName !== item.originalName) {
                 querySubtitle = `<div class="text-muted text-sm">Query: "${item.cleanedName}"</div>`;
             }
 
@@ -1951,14 +2246,23 @@ function showCopySuccessFeedback() {
 // 10. Sample Data & File Upload Handlers
 // ============================================================================
 function loadSampleNames() {
-    const samples = [
-        'Dr. Tio Haidar Hanif, M.Kom.',
-        'Haidar Fari Aditya',
-        'Prof. Ir. Budi Santoso, M.Sc., Ph.D.',
-        'dr. Siti Aminah, Sp.A',
-        'Achmad Ridwan, S.T., M.T.'
-    ];
-    document.getElementById('namesInput').value = samples.join('\n');
+    if (state.inputMode === 'scopus_id') {
+        const samples = [
+            '60611357400',
+            '57193231456',
+            'https://www.scopus.com/authid/detail.uri?authorId=57208922904'
+        ];
+        document.getElementById('namesInput').value = samples.join('\n');
+    } else {
+        const samples = [
+            'Dr. Tio Haidar Hanif, M.Kom.',
+            'Haidar Fari Aditya',
+            'Prof. Ir. Budi Santoso, M.Sc., Ph.D.',
+            'dr. Siti Aminah, Sp.A',
+            'Achmad Ridwan, S.T., M.T.'
+        ];
+        document.getElementById('namesInput').value = samples.join('\n');
+    }
 }
 
 function handleFileUpload(event) {
@@ -1973,7 +2277,7 @@ function handleFileUpload(event) {
             .filter(l => l.length > 0);
 
         document.getElementById('namesInput').value = lines.join('\n');
-        alert(`Berhasil memuat ${lines.length} nama dari file.`);
+        alert(`Berhasil memuat ${lines.length} baris dari file.`);
     };
     reader.readAsText(file);
 }
@@ -2000,6 +2304,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Attach Event Listeners (Compliant with Chrome Extension CSP)
+    document.getElementById('inputModeName')?.addEventListener('click', () => switchInputMode('name'));
+    document.getElementById('inputModeScopusId')?.addEventListener('click', () => switchInputMode('scopus_id'));
     document.getElementById('tabAll')?.addEventListener('click', () => switchSource('all'));
     document.getElementById('tabSinta')?.addEventListener('click', () => switchSource('sinta'));
     document.getElementById('tabGaruda')?.addEventListener('click', () => switchSource('garuda'));

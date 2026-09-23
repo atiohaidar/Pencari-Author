@@ -108,10 +108,24 @@
                 </div>
             </div>
 
+            <!-- Input Mode Selector (Name vs Scopus ID Reverse Lookup) -->
+            <div class="input-mode-container">
+                <div class="segmented-control" id="inputModeSelector">
+                    <button type="button" class="segmented-btn active" id="inputModeName" data-mode="name">
+                        <svg class="icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Berdasarkan Nama Author
+                    </button>
+                    <button type="button" class="segmented-btn" id="inputModeScopusId" data-mode="scopus_id">
+                        <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                        Reverse via Scopus ID (Otomatis ke SINTA & GARUDA)
+                    </button>
+                </div>
+            </div>
+
             <div class="grid-2">
                 <!-- Names Textarea -->
                 <div>
-                    <label for="namesInput">Daftar Nama yang Dicari (1 nama per baris):</label>
+                    <label for="namesInput" id="namesInputLabel">Daftar Nama yang Dicari (1 nama per baris):</label>
                     <textarea id="namesInput" placeholder="Contoh:&#10;Dr. Budi Santoso, M.Kom.&#10;Prof. Ir. Siti Aminah, Ph.D.&#10;Haidar Fari Aditya"></textarea>
                 </div>
 

@@ -332,11 +332,12 @@
             <nav class="table-of-contents">
                 <a href="#instalasi">1. Pemasangan Ekstensi</a>
                 <a href="#gabungan">2. Pencarian Gabungan (Semua Sumber)</a>
-                <a href="#sinta">3. Pencarian SINTA</a>
-                <a href="#garuda">4. Pencarian GARUDA</a>
-                <a href="#scopus">5. Pencarian Scopus</a>
-                <a href="#ekspor">6. Salin ke Spreadsheet</a>
-                <a href="#faq">7. Catatan Teknis (FAQ)</a>
+                <a href="#reverse-scopus">3. Reverse Lookup (Scopus ID ➔ SINTA & GARUDA)</a>
+                <a href="#sinta">4. Pencarian SINTA</a>
+                <a href="#garuda">5. Pencarian GARUDA</a>
+                <a href="#scopus">6. Pencarian Scopus</a>
+                <a href="#ekspor">7. Salin ke Spreadsheet</a>
+                <a href="#faq">8. Catatan Teknis (FAQ)</a>
             </nav>
         </section>
 
@@ -389,9 +390,37 @@
             </div>
         </section>
 
-        <!-- Section 3: Pencarian SINTA -->
+        <!-- Section 3: Reverse Lookup Scopus ID -->
+        <section id="reverse-scopus" class="doc-section">
+            <h2>3. Fitur Reverse Lookup: Dari Scopus ID ke SINTA & GARUDA</h2>
+            <p>
+                Punya daftar <strong>Scopus Author ID</strong> atau tautan profil Scopus dan ingin mencari akun SINTA dan GARUDA-nya secara otomatis? Anda dapat menggunakan sakelar <strong>Reverse via Scopus ID</strong>.
+            </p>
+
+            <ol>
+                <li>Pada Bagian 1 Input Dashboard, klik tombol sakelar <strong>Reverse via Scopus ID (Otomatis ke SINTA & GARUDA)</strong>.</li>
+                <li>
+                    Masukkan daftar Scopus Author ID atau link profil Scopus (satu per baris), contoh:
+                    <pre>60611357400
+57193231456
+https://www.scopus.com/authid/detail.uri?authorId=57208922904</pre>
+                </li>
+                <li>Klik tombol <strong>Mulai Reverse Lookup (Scopus ➔ SINTA & GARUDA)</strong>.</li>
+                <li>
+                    <strong>Cara Kerja Otomatis:</strong>
+                    <ul>
+                        <li>Ekstensi membuka halaman profil author Scopus di latar belakang dan membaca nama lengkap author, afiliasi kampus, jumlah dokumen, dan h-index.</li>
+                        <li>Format nama Scopus seperti <code>Hanif, Tio Haidar</code> otomatis dibalik menjadi <code>Tio Haidar Hanif</code>.</li>
+                        <li>Nama lengkap tersebut langsung dipakai untuk mencari author di <strong>SINTA</strong> dan <strong>GARUDA</strong>.</li>
+                        <li>Data ketiga sumber ditampilkan dalam satu baris tabel utuh dengan pencocokan 100% pada kolom Scopus dan kandidat terbaik pada kolom SINTA & GARUDA.</li>
+                    </ul>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Section 4: Pencarian SINTA -->
         <section id="sinta" class="doc-section">
-            <h2>3. Cara Menggunakan Pencarian SINTA</h2>
+            <h2>4. Cara Menggunakan Pencarian SINTA</h2>
             <p>
                 Tab SINTA digunakan khusus jika Anda hanya ingin mencari profil author pada portal resmi SINTA Kemdiktisaintek.
             </p>
@@ -417,9 +446,9 @@ Siti Aminah, S.Pd., M.Pd.</pre>
             </ol>
         </section>
 
-        <!-- Section 4: Pencarian GARUDA -->
+        <!-- Section 5: Pencarian GARUDA -->
         <section id="garuda" class="doc-section">
-            <h2>4. Cara Menggunakan Pencarian GARUDA</h2>
+            <h2>5. Cara Menggunakan Pencarian GARUDA</h2>
             <p>
                 Tab GARUDA digunakan khusus untuk mencari profil author pada portal resmi Garba Rujukan Digital (GARUDA) Kemdiktisaintek (<code>garuda.kemdiktisaintek.go.id</code>).
             </p>
@@ -432,9 +461,9 @@ Siti Aminah, S.Pd., M.Pd.</pre>
             </ol>
         </section>
 
-        <!-- Section 5: Pencarian Scopus -->
+        <!-- Section 6: Pencarian Scopus -->
         <section id="scopus" class="doc-section">
-            <h2>5. Cara Menggunakan Pencarian Scopus</h2>
+            <h2>6. Cara Menggunakan Pencarian Scopus</h2>
             <p>
                 Tab Scopus digunakan khusus jika Anda hanya ingin mencari data profil author di Scopus Elsevier (Scopus Author ID, afiliasi, kota, negara, dokumen, dan h-index).
             </p>
@@ -446,9 +475,9 @@ Siti Aminah, S.Pd., M.Pd.</pre>
             </ol>
         </section>
 
-        <!-- Section 5: Salin ke Spreadsheet -->
+        <!-- Section 7: Salin ke Spreadsheet -->
         <section id="ekspor" class="doc-section">
-            <h2>5. Menyalin Hasil ke Excel atau Google Sheets</h2>
+            <h2>7. Menyalin Hasil ke Excel atau Google Sheets</h2>
             <p>
                 Setelah pencarian selesai, data tabel dapat dipindahkan menggunakan salah satu dari dua metode:
             </p>
@@ -463,9 +492,9 @@ Siti Aminah, S.Pd., M.Pd.</pre>
             </ul>
         </section>
 
-        <!-- Section 6: Catatan Teknis & FAQ -->
+        <!-- Section 8: Catatan Teknis & FAQ -->
         <section id="faq" class="doc-section">
-            <h2>6. Catatan Teknis dan Kendala Umum</h2>
+            <h2>8. Catatan Teknis dan Kendala Umum</h2>
 
             <h3>Mengapa status author "Tidak Ditemukan"?</h3>
             <p>
