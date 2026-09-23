@@ -845,6 +845,7 @@ async function runQueue() {
 
                         // 1. Fetch SINTA
                         item.sinta.status = 'searching';
+                        item.sinta.searchUrl = `https://sinta.kemdiktisaintek.go.id/authors/?q=${encodeURIComponent(query)}`;
                         renderTable();
                         try {
                             const htmlS = await fetchSintaSearch(query);
@@ -861,6 +862,7 @@ async function runQueue() {
 
                         // 2. Fetch GARUDA
                         item.garuda.status = 'searching';
+                        item.garuda.searchUrl = `https://garuda.kemdiktisaintek.go.id/author?q=${encodeURIComponent(query)}&afil=${encodeURIComponent(campusQuery)}`;
                         renderTable();
                         try {
                             const htmlG = await fetchGarudaSearch(query, campusQuery);
@@ -899,6 +901,7 @@ async function runQueue() {
 
                 // 1. Fetch SINTA
                 item.sinta.status = 'searching';
+                item.sinta.searchUrl = `https://sinta.kemdiktisaintek.go.id/authors/?q=${encodeURIComponent(query)}`;
                 renderTable();
                 try {
                     const htmlS = await fetchSintaSearch(query);
@@ -915,6 +918,7 @@ async function runQueue() {
 
                 // 2. Fetch GARUDA
                 item.garuda.status = 'searching';
+                item.garuda.searchUrl = `https://garuda.kemdiktisaintek.go.id/author?q=${encodeURIComponent(query)}&afil=${encodeURIComponent(state.campusFilter || '')}`;
                 renderTable();
                 try {
                     const htmlG = await fetchGarudaSearch(query, state.campusFilter);
@@ -931,6 +935,7 @@ async function runQueue() {
 
                 // 3. Fetch SCOPUS
                 item.scopus.status = 'searching';
+                item.scopus.searchUrl = `https://www.scopus.com/results/authorNamesList.uri?name=name&st1=${encodeURIComponent(item.scopusLastName)}&st2=${encodeURIComponent(item.scopusFirstName)}&origin=searchauthorlookup`;
                 renderTable();
                 try {
                     const scCandidates = await fetchScopusSearch(item);
@@ -1178,6 +1183,11 @@ function renderCombinedSourceCell(item, source) {
     const c = data.selectedCandidate;
     const status = data.status;
     const candidates = data.candidates || [];
+    const searchUrl = data.searchUrl || '';
+
+    const searchLinkHtml = searchUrl
+        ? `<div style="margin-top:4px;"><a href="${searchUrl}" target="_blank" style="font-size:11px; color:var(--text-muted); text-decoration:none;" title="Buka hasil pencarian di ${source.toUpperCase()}">&#x1F517; Buka pencarian</a></div>`
+        : '';
 
     if (status === 'pending') {
         return `<div class="combined-cell-box status-notfound"><span class="text-muted text-sm">Menunggu antrean...</span></div>`;
@@ -1186,7 +1196,7 @@ function renderCombinedSourceCell(item, source) {
         return `<div class="combined-cell-box status-review"><span class="text-primary text-sm"><span class="dot"></span> Mencari data...</span></div>`;
     }
     if (status === 'not_found' || status === 'skipped') {
-        return `<div class="combined-cell-box status-notfound"><span class="badge badge-neutral" style="width:fit-content;">Tidak Ditemukan</span></div>`;
+        return `<div class="combined-cell-box status-notfound"><span class="badge badge-neutral" style="width:fit-content;">Tidak Ditemukan</span>${searchLinkHtml}</div>`;
     }
 
     const boxClass = status === 'need_review' ? 'status-review' : 'status-matched';
@@ -1251,6 +1261,7 @@ function renderCombinedSourceCell(item, source) {
             <div class="combined-cell-meta">
                 ${metaHtml}
             </div>
+            ${searchLinkHtml}
             ${actionBtn}
         </div>
     `;
